@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  
+  <!-- BỘ THẺ SEO GIÚP GOOGLE TÌM KIẾM LÊN TOP -->
+  <title>Quay Thử Xổ Số 3 Miền Hôm Nay - Tham Khảo XSMN, XSMT, XSMB</title>
+  <meta name="description" content="Công cụ quay thử xổ số Miền Nam (XSMN), Miền Trung (XSMT), Miền Bắc (XSMB) hôm nay và ngày mai chính xác, có âm thanh xổ số sống động và tải video MP4 miễn phí.">
+  <meta name="keywords" content="quay thử xổ số miền nam, tham khảo xổ số miền nam, quay thử xsmn, quay thử xsmt, quay thử xsmb, quay thử xổ số ngày mai, quay thử 3 miền">
+  <meta name="robots" content="index, follow">
+  <meta name="author" content="Tham khảo Xổ Số 3 Miền">
+
+  <!-- Hiển thị đẹp khi chia sẻ link lên Facebook / Zalo -->
+  <meta property="og:title" content="Quay Thử Xổ Số 3 Miền - Tham Khảo XSMN, XSMT, XSMB">
+  <meta property="og:description" content="Bấm vào để quay thử lấy hên xổ số Miền Nam, Miền Trung, Miền Bắc hôm nay và ngày mai.">
+  <meta property="og:type" content="website">
+
+  <!-- Thư viện đóng gói MP4 chuẩn H.264 + AAC Audio cho Facebook -->
+  <script src="https://cdn.jsdelivr.net/npm/mp4-muxer@5.1.3/build/mp4-muxer.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/fix-webm-duration@1.0.6/fix-webm-duration.js"></script>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      user-select: none;
+    }
+
+    html, body {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      background-color: #fff;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .app-bar {
+      background-color: #0b4a92;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 8px;
+      height: 30px;
+      flex-shrink: 0;
+      font-size: 14.5px;
+      font-weight: 600;
+    }
+
+    .app-bar-left {
+      display: flex;
+      align-items: center;
+    }
+
+    .app-bar .back-btn {
+      margin-right: 8px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .app-bar-right {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .sound-btn {
+      background: rgba(255, 255, 255, 0.2);
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      padding: 2px 7px;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .rec-badge {
+      display: none;
+      align-items: center;
+      gap: 4px;
+      font-size: 11px;
+      background: rgba(0, 0, 0, 0.35);
+      padding: 2px 7px;
+      border-radius: 10px;
+      color: #ffeb3b;
+      font-weight: 700;
+    }
+
+    .rec-badge.recording {
+      display: flex;
+    }
+
+    .rec-dot {
+      width: 7px;
+      height: 7px;
+      background-color: #ff1744;
+      border-radius: 50%;
+      animation: blink 1s infinite;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.2; }
+    }
+
+    .region-tabs {
+      display: flex;
+      background-color: #08376e;
+      padding: 3px 6px;
+      gap: 6px;
+      height: 28px;
+      flex-shrink: 0;
+    }
+
+    .region-tab {
+      flex: 1;
+      background: rgba(255, 255, 255, 0.15);
+      color: #e0e0e0;
+      border: none;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .region-tab.active {
+      background: #ffeb3b;
+      color: #b71c1c;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+    }
+
+    .control-bar {
+      background-color: #ebebeb;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 5px;
+      padding: 3px 6px;
+      height: 32px;
+      flex-shrink: 0;
+      border-bottom: 1px solid #dcdcdc;
+    }
+
+    .station-select {
+      background: #fff;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      padding: 3px 5px;
+      font-size: 12.5px;
+      font-weight: 600;
+      flex: 1;
+      min-width: 0;
+      color: #0b4a92;
+      outline: none;
+    }
+
+    .btn-group {
+      display: flex;
+      gap: 4px;
+      flex-shrink: 0;
+    }
+
+    .btn-spin {
+      background-color: #f37021;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      padding: 4px 10px;
+      font-size: 12.5px;
+      font-weight: 700;
+      cursor: pointer;
+      min-width: 84px;
+      text-align: center;
+    }
+
+    .btn-spin.spinning {
+      background-color: #d9430f;
+    }
+
+    .btn-download {
+      display: none;
+      background-color: #2e7d32;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      padding: 4px 7px;
+      font-size: 11.5px;
+      font-weight: 700;
+      cursor: pointer;
+      align-items: center;
+      justify-content: center;
+      white-space: nowrap;
+    }
+
+    .btn-download.ready {
+      display: inline-flex;
+    }
+
+    .title-area {
+      background-color: #fff;
+      text-align: center;
+      padding: 2px 0;
+      border-bottom: 1px solid #ddd;
+      flex-shrink: 0;
+    }
+
+    .title-area h1 {
+      color: #d32f2f;
+      font-size: 14px;
+      font-weight: 700;
+      line-height: 1.15;
+    }
+
+    .title-area p {
+      color: #666;
+      font-size: 10px;
+      line-height: 1.1;
+    }
+
+    .table-wrapper {
+      flex: 1;
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+      background: #fff;
+    }
+
+    .table-header {
+      display: flex;
+      background-color: #f5f5f5;
+      border-bottom: 1px solid #ccc;
+      height: 23px;
+      flex-shrink: 0;
+      font-weight: 700;
+      font-size: 13px;
+      color: #111;
+    }
+
+    .col-giai {
+      width: 10%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-right: 1px solid #e0e0e0;
+      font-size: 13px;
+      font-weight: 600;
+      color: #333;
+      background-color: #fafafa;
+      flex-shrink: 0;
+    }
+
+    .col-station {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      border-right: 1px solid #e0e0e0;
+      text-align: center;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      padding: 0 2px;
+    }
+
+    .col-station:last-child {
+      border-right: none;
+    }
+
+    .table-body {
+      flex: 1;
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .prize-row {
+      display: flex;
+      border-bottom: 1px solid #e0e0e0;
+      width: 100%;
+      min-height: 0;
+    }
+
+    .row-g8 { flex: 1.05; }
+    .row-g7 { flex: 1; }
+    .row-g6 { flex: 2.85; }
+    .row-g5 { flex: 1; }
+    .row-g4 { flex: 6.4; }
+    .row-g3 { flex: 1.9; }
+    .row-g2 { flex: 1; }
+    .row-g1 { flex: 1; }
+    .row-db { flex: 1.15; border-bottom: none; }
+
+    .num-cell {
+      flex: 1;
+      min-height: 0;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: clamp(14.5px, 2.45vh, 20px);
+      font-weight: 700;
+      color: #111;
+      letter-spacing: 0.3px;
+      line-height: 1;
+    }
+
+    .mode-4-cols .num-cell {
+      font-size: clamp(13px, 2.25vh, 17.5px);
+      letter-spacing: 0px;
+    }
+    .mode-4-cols .table-header {
+      font-size: 12px;
+    }
+
+    .row-g8 .num-cell,
+    .row-db .num-cell,
+    .row-db .col-giai,
+    .mb-row-db .num-cell,
+    .mb-row-db .col-giai,
+    .mb-row-g7 .num-cell,
+    .mb-row-g7 .col-giai {
+      color: #d32f2f;
+      font-size: clamp(15.5px, 2.6vh, 21px);
+    }
+
+    .mode-4-cols .row-db .num-cell {
+      font-size: clamp(13.5px, 2.35vh, 18.5px);
+    }
+
+    .num-cell.active-spin {
+      background-color: #fff176;
+    }
+
+    .mb-row-db { flex: 1.25; }
+    .mb-row-g1 { flex: 1.1; }
+    .mb-row-g2 { flex: 1.15; }
+    .mb-row-g3 { flex: 2.2; }
+    .mb-row-g4 { flex: 1.15; }
+    .mb-row-g5 { flex: 2.2; }
+    .mb-row-g6 { flex: 1.15; }
+    .mb-row-g7 { flex: 1.2; border-bottom: none; }
+
+    .mb-grid-container {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+    }
+
+    .mb-sub-row {
+      flex: 1;
+      display: flex;
+      width: 100%;
+      min-height: 0;
+      border-bottom: 1px dashed #eee;
+    }
+
+    .mb-sub-row:last-child {
+      border-bottom: none;
+    }
+
+    .mb-sub-row .num-cell {
+      border-right: 1px solid #f0f0f0;
+      font-size: clamp(16px, 2.65vh, 22px);
+    }
+
+    .mb-sub-row .num-cell:last-child {
+      border-right: none;
+    }
+
+    .mb-row-db .num-cell {
+      font-size: clamp(19px, 3.1vh, 26px);
+    }
+
+    .footer-bar {
+      background-color: #f9f9f9;
+      border-top: 1px solid #ccc;
+      height: 28px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      padding: 0 10px;
+      font-size: 12.5px;
+      font-weight: 500;
+      color: #222;
+    }
+
+    .radio-label {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      cursor: pointer;
+    }
+
+    .radio-label input[type="radio"] {
+      accent-color: #0b4a92;
+      width: 14px;
+      height: 14px;
+      cursor: pointer;
+    }
+
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.55);
+      z-index: 999;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .modal-overlay.show {
+      display: flex;
+    }
+
+    .modal-box {
+      background: #fff;
+      border-radius: 10px;
+      padding: 18px 16px;
+      width: 100%;
+      max-width: 330px;
+      text-align: center;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+    }
+
+    .modal-box h3 {
+      color: #0b4a92;
+      font-size: 16px;
+      margin-bottom: 6px;
+    }
+
+    .modal-box p {
+      color: #444;
+      font-size: 13px;
+      margin-bottom: 14px;
+      line-height: 1.4;
+    }
+
+    .modal-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .btn-save-main {
+      background: #1877f2;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      padding: 11px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      width: 100%;
+    }
+
+    .btn-save-dl {
+      background: #2e7d32;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      padding: 10px;
+      font-size: 13.5px;
+      font-weight: 700;
+      cursor: pointer;
+      width: 100%;
+    }
+
+    .btn-close-modal {
+      background: #e0e0e0;
+      color: #333;
+      border: none;
+      border-radius: 6px;
+      padding: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app-bar">
+    <div class="app-bar-left">
+      <span class="back-btn">&#8592;</span>
+      <span>Quay thử 3 Miền</span>
+    </div>
+    <div class="app-bar-right">
+      <div id="recBadge" class="rec-badge">
+        <span class="rec-dot"></span>
+        <span id="recTimerText">00:00</span>
+      </div>
+      <button id="muteBtn" class="sound-btn" onclick="toggleMute()">🔊 Bật tiếng</button>
+      <button id="mp3Btn" class="sound-btn" onclick="document.getElementById('mp3Input').click()">🎵 Đổi nhạc</button>
+      <input type="file" id="mp3Input" accept="audio/*" style="display:none" onchange="loadCustomMp3(event)">
+    </div>
+  </div>
+
+  <div class="region-tabs">
+    <button id="tab-mn" class="region-tab active" onclick="selectRegionTab('mn')">MIỀN NAM</button>
+    <button id="tab-mt" class="region-tab" onclick="selectRegionTab('mt')">MIỀN TRUNG</button>
+    <button id="tab-mb" class="region-tab" onclick="selectRegionTab('mb')">MIỀN BẮC</button>
+  </div>
+
+  <div class="control-bar">
+    <select id="daySelect" class="station-select" onchange="changeDayFromDropdown()"></select>
+    <div class="btn-group">
+      <button id="spinBtn" class="btn-spin" onclick="toggleSpin()">QUAY THỬ</button>
+      <button id="downloadBtn" class="btn-download" onclick="openModal()">⬇ VIDEO</button>
+    </div>
+  </div>
+
+  <div class="title-area">
+    <h1 id="mainTitle">Tham khảo Xổ Số miền Nam</h1>
+    <p id="subTitle">Thông tin chỉ mang tính tham khảo</p>
+  </div>
+
+  <div class="table-wrapper" id="tableWrapper">
+    <div class="table-header" id="tableHeader"></div>
+    <div class="table-body" id="tableBody"></div>
+  </div>
+
+  <div class="footer-bar">
+    <label class="radio-label">
+      <input type="radio" name="viewMode" value="all" checked onchange="updateDisplayMode()"> Đầy đủ
+    </label>
+    <label class="radio-label">
+      <input type="radio" name="viewMode" value="2" onchange="updateDisplayMode()"> 2 Số
+    </label>
+    <label class="radio-label">
+      <input type="radio" name="viewMode" value="3" onchange="updateDisplayMode()"> 3 Số
+    </label>
+  </div>
+
+  <div id="videoModal" class="modal-overlay">
+    <div class="modal-box">
+      <h3>Đã xuất Video + Nhạc Xổ Số!</h3>
+      <p id="modalDesc">Video chuẩn MP4 đã sẵn sàng đăng Facebook / TikTok:</p>
+      <div class="modal-actions">
+        <button class="btn-save-main" onclick="shareVideoNow()">📤 CHIA SẺ LÊN FACEBOOK / ZALO</button>
+        <button class="btn-save-dl" onclick="downloadVideoNow()">⬇ TẢI FILE MP4 VỀ MÁY</button>
+        <button class="btn-close-modal" onclick="closeModal()">Đóng</button>
+      </div>
+    </div>
+  </div>
+
+  <canvas id="videoCanvas" width="720" height="1280" style="position:fixed; left:-9999px; top:0; pointer-events:none;"></canvas>
+
+  <script>
+    const prizeConfigMNMT = [
+      { label: '8', class: 'row-g8', count: 1, digits: 2 },
+      { label: '7', class: 'row-g7', count: 1, digits: 3 },
+      { label: '6', class: 'row-g6', count: 3, digits: 4 },
+      { label: '5', class: 'row-g5', count: 1, digits: 4 },
+      { label: '4', class: 'row-g4', count: 7, digits: 5 },
+      { label: '3', class: 'row-g3', count: 2, digits: 5 },
+      { label: '2', class: 'row-g2', count: 1, digits: 5 },
+      { label: '1', class: 'row-g1', count: 1, digits: 5 },
+      { label: 'ĐB', class: 'row-db', count: 1, digits: 6 }
+    ];
+
+    const prizeConfigMB = [
+      { label: 'ĐB', class: 'mb-row-db', rows: 1, cols: 1, digits: 5, spinSteps: [9] },
+      { label: '1',  class: 'mb-row-g1', rows: 1, cols: 1, digits: 5, spinSteps: [8] },
+      { label: '2',  class: 'mb-row-g2', rows: 1, cols: 2, digits: 5, spinSteps: [7] },
+      { label: '3',  class: 'mb-row-g3', rows: 2, cols: 3, digits: 5, spinSteps: [5, 6] },
+      { label: '4',  class: 'mb-row-g4', rows: 1, cols: 4, digits: 4, spinSteps: [4] },
+      { label: '5',  class: 'mb-row-g5', rows: 2, cols: 3, digits: 4, spinSteps: [2, 3] },
+      { label: '6',  class: 'mb-row-g6', rows: 1, cols: 3, digits: 3, spinSteps: [1] },
+      { label: '7',  class: 'mb-row-g7', rows: 1, cols: 4, digits: 2, spinSteps: [0] }
+    ];
+
+    const schedulesByRegion = {
+      mn: {
+        shortName: 'Miền Nam',
+        title: 'Tham khảo Xổ Số miền Nam',
+        drawHour: 16, drawMin: 35,
+        days: {
+          0: { name: 'Chủ Nhật', stations: ['Tiền Giang', 'Kiên Giang', 'Đà Lạt'] },
+          1: { name: 'Thứ 2', stations: ['TP.HCM', 'Đồng Tháp', 'Cà Mau'] },
+          2: { name: 'Thứ 3', stations: ['Bến Tre', 'Vũng Tàu', 'Bạc Liêu'] },
+          3: { name: 'Thứ 4', stations: ['Đồng Nai', 'Cần Thơ', 'Sóc Trăng'] },
+          4: { name: 'Thứ 5', stations: ['Tây Ninh', 'An Giang', 'Bình Thuận'] },
+          5: { name: 'Thứ 6', stations: ['Vĩnh Long', 'Bình Dương', 'Trà Vinh'] },
+          6: { name: 'Thứ 7', stations: ['TP.HCM', 'Long An', 'Bình Phước', 'Hậu Giang'] }
+        }
+      },
+      mt: {
+        shortName: 'Miền Trung',
+        title: 'Tham khảo Xổ Số miền Trung',
+        drawHour: 17, drawMin: 35,
+        days: {
+          0: { name: 'Chủ Nhật', stations: ['Khánh Hòa', 'Kon Tum', 'T.T.Huế'] },
+          1: { name: 'Thứ 2', stations: ['Phú Yên', 'T.T.Huế'] },
+          2: { name: 'Thứ 3', stations: ['Đắk Lắk', 'Quảng Nam'] },
+          3: { name: 'Thứ 4', stations: ['Đà Nẵng', 'Khánh Hòa'] },
+          4: { name: 'Thứ 5', stations: ['Bình Định', 'Quảng Trị', 'Quảng Bình'] },
+          5: { name: 'Thứ 6', stations: ['Gia Lai', 'Ninh Thuận'] },
+          6: { name: 'Thứ 7', stations: ['Đà Nẵng', 'Quảng Ngãi', 'Đắk Nông'] }
+        }
+      },
+      mb: {
+        shortName: 'Miền Bắc',
+        title: 'Tham khảo Xổ Số miền Bắc',
+        drawHour: 18, drawMin: 35,
+        days: {
+          0: { name: 'Chủ Nhật', stations: ['Thái Bình'] },
+          1: { name: 'Thứ 2', stations: ['Hà Nội'] },
+          2: { name: 'Thứ 3', stations: ['Quảng Ninh'] },
+          3: { name: 'Thứ 4', stations: ['Bắc Ninh'] },
+          4: { name: 'Thứ 5', stations: ['Hà Nội'] },
+          5: { name: 'Thứ 6', stations: ['Hải Phòng'] },
+          6: { name: 'Thứ 7', stations: ['Nam Định'] }
+        }
+      }
+    };
+
+    let currentRegion = 'mn';
+    let currentDayIdx = new Date().getDay();
+    let currentStations = [];
+    let isSpinning = false;
+    let activeStep = -1;
+    let spinTimeout = null;
+    let pauseTimeout = null;
+    let finishRecTimeout = null;
+    let animInterval = null;
+    let totalSteps = 0;
+
+    const TICK_SPEED_MS = 220;
+
+    let audioCtx = null;
+    let masterGain = null;
+    let streamDest = null;
+    let isMuted = false;
+    let melodyTimer = null;
+    let stepBeat = 0;
+    let customAudioBuffer = null;
+    let customAudioSource = null;
+
+    const traditionalLotteryScore = [
+      [523.25, 392.00, 130.81, 0.16],
+      [659.25, 523.25, 0,      0.16],
+      [783.99, 659.25, 196.00, 0.16],
+      [1046.50,783.99, 130.81, 0.30],
+      [0,      0,      0,      0.12],
+      [783.99, 659.25, 196.00, 0.16],
+      [1046.50,783.99, 130.81, 0.34],
+      [0,      0,      0,      0.14],
+
+      [880.00, 698.46, 174.61, 0.16],
+      [1046.50,880.00, 0,      0.16],
+      [880.00, 698.46, 174.61, 0.16],
+      [783.99, 659.25, 130.81, 0.30],
+      [659.25, 523.25, 196.00, 0.16],
+      [783.99, 659.25, 0,      0.16],
+      [659.25, 523.25, 196.00, 0.16],
+      [523.25, 392.00, 130.81, 0.34],
+
+      [587.33, 440.00, 146.83, 0.16],
+      [698.46, 587.33, 0,      0.16],
+      [880.00, 698.46, 146.83, 0.16],
+      [1174.66,880.00, 196.00, 0.30],
+      [0,      0,      0,      0.12],
+      [987.77, 783.99, 196.00, 0.16],
+      [783.99, 587.33, 0,      0.16],
+      [1174.66,987.77, 196.00, 0.32],
+
+      [1046.50,783.99, 130.81, 0.18],
+      [783.99, 659.25, 196.00, 0.16],
+      [659.25, 523.25, 130.81, 0.16],
+      [783.99, 587.33, 196.00, 0.18],
+      [1046.50,783.99, 130.81, 0.42],
+      [0,      0,      196.00, 0.15],
+      [1046.50,659.25, 130.81, 0.42],
+      [0,      0,      0,      0.15]
+    ];
+
+    function ensureAudioContext() {
+      const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+      if (!AudioContextClass) return null;
+      if (!audioCtx) {
+        audioCtx = new AudioContextClass({ sampleRate: 44100 });
+        masterGain = audioCtx.createGain();
+        masterGain.gain.value = isMuted ? 0 : 0.9;
+        streamDest = audioCtx.createMediaStreamDestination();
+        masterGain.connect(audioCtx.destination);
+        masterGain.connect(streamDest);
+      }
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+      return audioCtx;
+    }
+
+    function playBrassNote(freq, duration, vol = 0.14) {
+      if (!audioCtx || freq <= 0) return;
+      const now = audioCtx.currentTime;
+      const osc1 = audioCtx.createOscillator();
+      const osc2 = audioCtx.createOscillator();
+      const filter = audioCtx.createBiquadFilter();
+      const gain = audioCtx.createGain();
+
+      osc1.type = 'sawtooth';
+      osc2.type = 'triangle';
+      osc1.frequency.setValueAtTime(freq, now);
+      osc2.frequency.setValueAtTime(freq * 1.003, now);
+
+      filter.type = 'lowpass';
+      filter.frequency.setValueAtTime(freq * 2.8, now);
+      filter.Q.value = 2.5;
+
+      gain.gain.setValueAtTime(0.001, now);
+      gain.gain.linearRampToValueAtTime(vo
