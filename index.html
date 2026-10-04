@@ -3,507 +3,75 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  
-  <!-- BỘ THẺ SEO GIÚP GOOGLE TÌM KIẾM LÊN TOP -->
   <title>Quay Thử Xổ Số 3 Miền Hôm Nay - Tham Khảo XSMN, XSMT, XSMB</title>
-  <meta name="description" content="Công cụ quay thử xổ số Miền Nam (XSMN), Miền Trung (XSMT), Miền Bắc (XSMB) hôm nay và ngày mai chính xác, có âm thanh xổ số sống động và tải video MP4 miễn phí.">
-  <meta name="keywords" content="quay thử xổ số miền nam, tham khảo xổ số miền nam, quay thử xsmn, quay thử xsmt, quay thử xsmb, quay thử xổ số ngày mai, quay thử 3 miền">
+  <meta name="description" content="Công cụ quay thử xổ số Miền Nam (XSMN), Miền Trung (XSMT), Miền Bắc (XSMB) hôm nay và ngày mai chính xác, có âm thanh và tải video MP4 miễn phí.">
+  <meta name="keywords" content="quay thử xổ số miền nam, tham khảo xổ số miền nam, quay thử xsmn, quay thử xsmt, quay thử xsmb, quay thử 3 miền">
   <meta name="robots" content="index, follow">
-  <meta name="author" content="Tham khảo Xổ Số 3 Miền">
-
-  <!-- Hiển thị đẹp khi chia sẻ link lên Facebook / Zalo -->
-  <meta property="og:title" content="Quay Thử Xổ Số 3 Miền - Tham Khảo XSMN, XSMT, XSMB">
-  <meta property="og:description" content="Bấm vào để quay thử lấy hên xổ số Miền Nam, Miền Trung, Miền Bắc hôm nay và ngày mai.">
-  <meta property="og:type" content="website">
-
-  <!-- Thư viện đóng gói MP4 chuẩn H.264 + AAC Audio cho Facebook -->
   <script src="https://cdn.jsdelivr.net/npm/mp4-muxer@5.1.3/build/mp4-muxer.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/fix-webm-duration@1.0.6/fix-webm-duration.js"></script>
   <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      user-select: none;
-    }
-
-    html, body {
-      position: fixed;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      background-color: #fff;
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .app-bar {
-      background-color: #0b4a92;
-      color: #fff;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 8px;
-      height: 30px;
-      flex-shrink: 0;
-      font-size: 14.5px;
-      font-weight: 600;
-    }
-
-    .app-bar-left {
-      display: flex;
-      align-items: center;
-    }
-
-    .app-bar .back-btn {
-      margin-right: 8px;
-      font-size: 16px;
-      cursor: pointer;
-    }
-
-    .app-bar-right {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-    }
-
-    .sound-btn {
-      background: rgba(255, 255, 255, 0.2);
-      color: #fff;
-      border: none;
-      border-radius: 4px;
-      padding: 2px 7px;
-      font-size: 11px;
-      font-weight: 600;
-      cursor: pointer;
-    }
-
-    .rec-badge {
-      display: none;
-      align-items: center;
-      gap: 4px;
-      font-size: 11px;
-      background: rgba(0, 0, 0, 0.35);
-      padding: 2px 7px;
-      border-radius: 10px;
-      color: #ffeb3b;
-      font-weight: 700;
-    }
-
-    .rec-badge.recording {
-      display: flex;
-    }
-
-    .rec-dot {
-      width: 7px;
-      height: 7px;
-      background-color: #ff1744;
-      border-radius: 50%;
-      animation: blink 1s infinite;
-    }
-
-    @keyframes blink {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.2; }
-    }
-
-    .region-tabs {
-      display: flex;
-      background-color: #08376e;
-      padding: 3px 6px;
-      gap: 6px;
-      height: 28px;
-      flex-shrink: 0;
-    }
-
-    .region-tab {
-      flex: 1;
-      background: rgba(255, 255, 255, 0.15);
-      color: #e0e0e0;
-      border: none;
-      border-radius: 4px;
-      font-size: 12px;
-      font-weight: 700;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .region-tab.active {
-      background: #ffeb3b;
-      color: #b71c1c;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.3);
-    }
-
-    .control-bar {
-      background-color: #ebebeb;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 5px;
-      padding: 3px 6px;
-      height: 32px;
-      flex-shrink: 0;
-      border-bottom: 1px solid #dcdcdc;
-    }
-
-    .station-select {
-      background: #fff;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      padding: 3px 5px;
-      font-size: 12.5px;
-      font-weight: 600;
-      flex: 1;
-      min-width: 0;
-      color: #0b4a92;
-      outline: none;
-    }
-
-    .btn-group {
-      display: flex;
-      gap: 4px;
-      flex-shrink: 0;
-    }
-
-    .btn-spin {
-      background-color: #f37021;
-      color: #fff;
-      border: none;
-      border-radius: 4px;
-      padding: 4px 10px;
-      font-size: 12.5px;
-      font-weight: 700;
-      cursor: pointer;
-      min-width: 84px;
-      text-align: center;
-    }
-
-    .btn-spin.spinning {
-      background-color: #d9430f;
-    }
-
-    .btn-download {
-      display: none;
-      background-color: #2e7d32;
-      color: #fff;
-      border: none;
-      border-radius: 4px;
-      padding: 4px 7px;
-      font-size: 11.5px;
-      font-weight: 700;
-      cursor: pointer;
-      align-items: center;
-      justify-content: center;
-      white-space: nowrap;
-    }
-
-    .btn-download.ready {
-      display: inline-flex;
-    }
-
-    .title-area {
-      background-color: #fff;
-      text-align: center;
-      padding: 2px 0;
-      border-bottom: 1px solid #ddd;
-      flex-shrink: 0;
-    }
-
-    .title-area h1 {
-      color: #d32f2f;
-      font-size: 14px;
-      font-weight: 700;
-      line-height: 1.15;
-    }
-
-    .title-area p {
-      color: #666;
-      font-size: 10px;
-      line-height: 1.1;
-    }
-
-    .table-wrapper {
-      flex: 1;
-      min-height: 0;
-      display: flex;
-      flex-direction: column;
-      background: #fff;
-    }
-
-    .table-header {
-      display: flex;
-      background-color: #f5f5f5;
-      border-bottom: 1px solid #ccc;
-      height: 23px;
-      flex-shrink: 0;
-      font-weight: 700;
-      font-size: 13px;
-      color: #111;
-    }
-
-    .col-giai {
-      width: 10%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-right: 1px solid #e0e0e0;
-      font-size: 13px;
-      font-weight: 600;
-      color: #333;
-      background-color: #fafafa;
-      flex-shrink: 0;
-    }
-
-    .col-station {
-      flex: 1;
-      min-width: 0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      border-right: 1px solid #e0e0e0;
-      text-align: center;
-      overflow: hidden;
-      white-space: nowrap;
-      text-overflow: ellipsis;
-      padding: 0 2px;
-    }
-
-    .col-station:last-child {
-      border-right: none;
-    }
-
-    .table-body {
-      flex: 1;
-      min-height: 0;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .prize-row {
-      display: flex;
-      border-bottom: 1px solid #e0e0e0;
-      width: 100%;
-      min-height: 0;
-    }
-
-    .row-g8 { flex: 1.05; }
-    .row-g7 { flex: 1; }
-    .row-g6 { flex: 2.85; }
-    .row-g5 { flex: 1; }
-    .row-g4 { flex: 6.4; }
-    .row-g3 { flex: 1.9; }
-    .row-g2 { flex: 1; }
-    .row-g1 { flex: 1; }
-    .row-db { flex: 1.15; border-bottom: none; }
-
-    .num-cell {
-      flex: 1;
-      min-height: 0;
-      width: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: clamp(14.5px, 2.45vh, 20px);
-      font-weight: 700;
-      color: #111;
-      letter-spacing: 0.3px;
-      line-height: 1;
-    }
-
-    .mode-4-cols .num-cell {
-      font-size: clamp(13px, 2.25vh, 17.5px);
-      letter-spacing: 0px;
-    }
-    .mode-4-cols .table-header {
-      font-size: 12px;
-    }
-
-    .row-g8 .num-cell,
-    .row-db .num-cell,
-    .row-db .col-giai,
-    .mb-row-db .num-cell,
-    .mb-row-db .col-giai,
-    .mb-row-g7 .num-cell,
-    .mb-row-g7 .col-giai {
-      color: #d32f2f;
-      font-size: clamp(15.5px, 2.6vh, 21px);
-    }
-
-    .mode-4-cols .row-db .num-cell {
-      font-size: clamp(13.5px, 2.35vh, 18.5px);
-    }
-
-    .num-cell.active-spin {
-      background-color: #fff176;
-    }
-
-    .mb-row-db { flex: 1.25; }
-    .mb-row-g1 { flex: 1.1; }
-    .mb-row-g2 { flex: 1.15; }
-    .mb-row-g3 { flex: 2.2; }
-    .mb-row-g4 { flex: 1.15; }
-    .mb-row-g5 { flex: 2.2; }
-    .mb-row-g6 { flex: 1.15; }
-    .mb-row-g7 { flex: 1.2; border-bottom: none; }
-
-    .mb-grid-container {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      min-height: 0;
-    }
-
-    .mb-sub-row {
-      flex: 1;
-      display: flex;
-      width: 100%;
-      min-height: 0;
-      border-bottom: 1px dashed #eee;
-    }
-
-    .mb-sub-row:last-child {
-      border-bottom: none;
-    }
-
-    .mb-sub-row .num-cell {
-      border-right: 1px solid #f0f0f0;
-      font-size: clamp(16px, 2.65vh, 22px);
-    }
-
-    .mb-sub-row .num-cell:last-child {
-      border-right: none;
-    }
-
-    .mb-row-db .num-cell {
-      font-size: clamp(19px, 3.1vh, 26px);
-    }
-
-    .footer-bar {
-      background-color: #f9f9f9;
-      border-top: 1px solid #ccc;
-      height: 28px;
-      flex-shrink: 0;
-      display: flex;
-      align-items: center;
-      justify-content: space-around;
-      padding: 0 10px;
-      font-size: 12.5px;
-      font-weight: 500;
-      color: #222;
-    }
-
-    .radio-label {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      cursor: pointer;
-    }
-
-    .radio-label input[type="radio"] {
-      accent-color: #0b4a92;
-      width: 14px;
-      height: 14px;
-      cursor: pointer;
-    }
-
-    .modal-overlay {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.55);
-      z-index: 999;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-    }
-
-    .modal-overlay.show {
-      display: flex;
-    }
-
-    .modal-box {
-      background: #fff;
-      border-radius: 10px;
-      padding: 18px 16px;
-      width: 100%;
-      max-width: 330px;
-      text-align: center;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.25);
-    }
-
-    .modal-box h3 {
-      color: #0b4a92;
-      font-size: 16px;
-      margin-bottom: 6px;
-    }
-
-    .modal-box p {
-      color: #444;
-      font-size: 13px;
-      margin-bottom: 14px;
-      line-height: 1.4;
-    }
-
-    .modal-actions {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    .btn-save-main {
-      background: #1877f2;
-      color: #fff;
-      border: none;
-      border-radius: 6px;
-      padding: 11px;
-      font-size: 14px;
-      font-weight: 700;
-      cursor: pointer;
-      width: 100%;
-    }
-
-    .btn-save-dl {
-      background: #2e7d32;
-      color: #fff;
-      border: none;
-      border-radius: 6px;
-      padding: 10px;
-      font-size: 13.5px;
-      font-weight: 700;
-      cursor: pointer;
-      width: 100%;
-    }
-
-    .btn-close-modal {
-      background: #e0e0e0;
-      color: #333;
-      border: none;
-      border-radius: 6px;
-      padding: 8px;
-      font-size: 13px;
-      font-weight: 600;
-      cursor: pointer;
-      width: 100%;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; user-select: none; }
+    html, body { position: fixed; inset: 0; width: 100%; height: 100%; background: #fff; overflow: hidden; display: flex; flex-direction: column; }
+    .app-bar { background: #0b4a92; color: #fff; display: flex; align-items: center; justify-content: space-between; padding: 0 8px; height: 30px; flex-shrink: 0; font-size: 14.5px; font-weight: 600; }
+    .app-bar-left, .app-bar-right { display: flex; align-items: center; gap: 5px; }
+    .sound-btn { background: rgba(255,255,255,0.2); color: #fff; border: none; border-radius: 4px; padding: 2px 7px; font-size: 11px; font-weight: 600; cursor: pointer; }
+    .rec-badge { display: none; align-items: center; gap: 4px; font-size: 11px; background: rgba(0,0,0,0.35); padding: 2px 7px; border-radius: 10px; color: #ffeb3b; font-weight: 700; }
+    .rec-badge.recording { display: flex; }
+    .rec-dot { width: 7px; height: 7px; background: #ff1744; border-radius: 50%; animation: blink 1s infinite; }
+    @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.2; } }
+    .region-tabs { display: flex; background: #08376e; padding: 3px 6px; gap: 6px; height: 28px; flex-shrink: 0; }
+    .region-tab { flex: 1; background: rgba(255,255,255,0.15); color: #e0e0e0; border: none; border-radius: 4px; font-size: 12px; font-weight: 700; cursor: pointer; }
+    .region-tab.active { background: #ffeb3b; color: #b71c1c; }
+    .control-bar { background: #ebebeb; display: flex; justify-content: space-between; align-items: center; gap: 5px; padding: 3px 6px; height: 32px; flex-shrink: 0; border-bottom: 1px solid #dcdcdc; }
+    .station-select { background: #fff; border: 1px solid #ccc; border-radius: 4px; padding: 3px 5px; font-size: 12.5px; font-weight: 600; flex: 1; min-width: 0; color: #0b4a92; outline: none; }
+    .btn-group { display: flex; gap: 4px; flex-shrink: 0; }
+    .btn-spin { background: #f37021; color: #fff; border: none; border-radius: 4px; padding: 4px 10px; font-size: 12.5px; font-weight: 700; cursor: pointer; min-width: 84px; }
+    .btn-spin.spinning { background: #d9430f; }
+    .btn-download { display: none; background: #2e7d32; color: #fff; border: none; border-radius: 4px; padding: 4px 7px; font-size: 11.5px; font-weight: 700; cursor: pointer; }
+    .btn-download.ready { display: inline-flex; }
+    .title-area { background: #fff; text-align: center; padding: 2px 0; border-bottom: 1px solid #ddd; flex-shrink: 0; }
+    .title-area h1 { color: #d32f2f; font-size: 14px; font-weight: 700; line-height: 1.15; }
+    .title-area p { color: #666; font-size: 10px; line-height: 1.1; }
+    .table-wrapper { flex: 1; min-height: 0; display: flex; flex-direction: column; background: #fff; }
+    .table-header { display: flex; background: #f5f5f5; border-bottom: 1px solid #ccc; height: 23px; flex-shrink: 0; font-weight: 700; font-size: 13px; color: #111; }
+    .col-giai { width: 10%; display: flex; align-items: center; justify-content: center; border-right: 1px solid #e0e0e0; font-size: 13px; font-weight: 600; color: #333; background: #fafafa; flex-shrink: 0; }
+    .col-station { flex: 1; min-width: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; border-right: 1px solid #e0e0e0; text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; padding: 0 2px; }
+    .col-station:last-child { border-right: none; }
+    .table-body { flex: 1; min-height: 0; display: flex; flex-direction: column; }
+    .prize-row { display: flex; border-bottom: 1px solid #e0e0e0; width: 100%; min-height: 0; }
+    .row-g8 { flex: 1.05; } .row-g7 { flex: 1; } .row-g6 { flex: 2.85; } .row-g5 { flex: 1; } .row-g4 { flex: 6.4; } .row-g3 { flex: 1.9; } .row-g2 { flex: 1; } .row-g1 { flex: 1; } .row-db { flex: 1.15; border-bottom: none; }
+    .num-cell { flex: 1; min-height: 0; width: 100%; display: flex; align-items: center; justify-content: center; font-size: clamp(14.5px, 2.45vh, 20px); font-weight: 700; color: #111; letter-spacing: 0.3px; line-height: 1; }
+    .mode-4-cols .num-cell { font-size: clamp(13px, 2.25vh, 17.5px); letter-spacing: 0; }
+    .mode-4-cols .table-header { font-size: 12px; }
+    .row-g8 .num-cell, .row-db .num-cell, .row-db .col-giai, .mb-row-db .num-cell, .mb-row-db .col-giai, .mb-row-g7 .num-cell, .mb-row-g7 .col-giai { color: #d32f2f; font-size: clamp(15.5px, 2.6vh, 21px); }
+    .mode-4-cols .row-db .num-cell { font-size: clamp(13.5px, 2.35vh, 18.5px); }
+    .num-cell.active-spin { background: #fff176; }
+    .mb-row-db { flex: 1.25; } .mb-row-g1 { flex: 1.1; } .mb-row-g2 { flex: 1.15; } .mb-row-g3 { flex: 2.2; } .mb-row-g4 { flex: 1.15; } .mb-row-g5 { flex: 2.2; } .mb-row-g6 { flex: 1.15; } .mb-row-g7 { flex: 1.2; border-bottom: none; }
+    .mb-grid-container { flex: 1; display: flex; flex-direction: column; min-height: 0; }
+    .mb-sub-row { flex: 1; display: flex; width: 100%; min-height: 0; border-bottom: 1px dashed #eee; }
+    .mb-sub-row:last-child { border-bottom: none; }
+    .mb-sub-row .num-cell { border-right: 1px solid #f0f0f0; font-size: clamp(16px, 2.65vh, 22px); }
+    .mb-sub-row .num-cell:last-child { border-right: none; }
+    .mb-row-db .num-cell { font-size: clamp(19px, 3.1vh, 26px); }
+    .footer-bar { background: #f9f9f9; border-top: 1px solid #ccc; height: 28px; flex-shrink: 0; display: flex; align-items: center; justify-content: space-around; padding: 0 10px; font-size: 12.5px; font-weight: 500; color: #222; }
+    .radio-label { display: flex; align-items: center; gap: 5px; cursor: pointer; }
+    .radio-label input { accent-color: #0b4a92; width: 14px; height: 14px; }
+    .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.55); z-index: 999; align-items: center; justify-content: center; padding: 20px; }
+    .modal-overlay.show { display: flex; }
+    .modal-box { background: #fff; border-radius: 10px; padding: 18px 16px; width: 100%; max-width: 330px; text-align: center; box-shadow: 0 8px 24px rgba(0,0,0,0.25); }
+    .modal-box h3 { color: #0b4a92; font-size: 16px; margin-bottom: 6px; }
+    .modal-box p { color: #444; font-size: 13px; margin-bottom: 14px; line-height: 1.4; }
+    .modal-actions { display: flex; flex-direction: column; gap: 8px; }
+    .btn-save-main { background: #1877f2; color: #fff; border: none; border-radius: 6px; padding: 11px; font-size: 14px; font-weight: 700; cursor: pointer; width: 100%; }
+    .btn-save-dl { background: #2e7d32; color: #fff; border: none; border-radius: 6px; padding: 10px; font-size: 13.5px; font-weight: 700; cursor: pointer; width: 100%; }
+    .btn-close-modal { background: #e0e0e0; color: #333; border: none; border-radius: 6px; padding: 8px; font-size: 13px; font-weight: 600; cursor: pointer; width: 100%; }
   </style>
 </head>
 <body>
-
   <div class="app-bar">
-    <div class="app-bar-left">
-      <span class="back-btn">&#8592;</span>
-      <span>Quay thử 3 Miền</span>
-    </div>
+    <div class="app-bar-left"><span>&#8592; Quay thử 3 Miền</span></div>
     <div class="app-bar-right">
-      <div id="recBadge" class="rec-badge">
-        <span class="rec-dot"></span>
-        <span id="recTimerText">00:00</span>
-      </div>
+      <div id="recBadge" class="rec-badge"><span class="rec-dot"></span><span id="recTimerText">00:00</span></div>
       <button id="muteBtn" class="sound-btn" onclick="toggleMute()">🔊 Bật tiếng</button>
       <button id="mp3Btn" class="sound-btn" onclick="document.getElementById('mp3Input').click()">🎵 Đổi nhạc</button>
       <input type="file" id="mp3Input" accept="audio/*" style="display:none" onchange="loadCustomMp3(event)">
@@ -535,15 +103,9 @@
   </div>
 
   <div class="footer-bar">
-    <label class="radio-label">
-      <input type="radio" name="viewMode" value="all" checked onchange="updateDisplayMode()"> Đầy đủ
-    </label>
-    <label class="radio-label">
-      <input type="radio" name="viewMode" value="2" onchange="updateDisplayMode()"> 2 Số
-    </label>
-    <label class="radio-label">
-      <input type="radio" name="viewMode" value="3" onchange="updateDisplayMode()"> 3 Số
-    </label>
+    <label class="radio-label"><input type="radio" name="viewMode" value="all" checked onchange="updateDisplayMode()"> Đầy đủ</label>
+    <label class="radio-label"><input type="radio" name="viewMode" value="2" onchange="updateDisplayMode()"> 2 Số</label>
+    <label class="radio-label"><input type="radio" name="viewMode" value="3" onchange="updateDisplayMode()"> 3 Số</label>
   </div>
 
   <div id="videoModal" class="modal-overlay">
@@ -586,9 +148,7 @@
 
     const schedulesByRegion = {
       mn: {
-        shortName: 'Miền Nam',
-        title: 'Tham khảo Xổ Số miền Nam',
-        drawHour: 16, drawMin: 35,
+        shortName: 'Miền Nam', title: 'Tham khảo Xổ Số miền Nam', drawHour: 16, drawMin: 35,
         days: {
           0: { name: 'Chủ Nhật', stations: ['Tiền Giang', 'Kiên Giang', 'Đà Lạt'] },
           1: { name: 'Thứ 2', stations: ['TP.HCM', 'Đồng Tháp', 'Cà Mau'] },
@@ -600,9 +160,7 @@
         }
       },
       mt: {
-        shortName: 'Miền Trung',
-        title: 'Tham khảo Xổ Số miền Trung',
-        drawHour: 17, drawMin: 35,
+        shortName: 'Miền Trung', title: 'Tham khảo Xổ Số miền Trung', drawHour: 17, drawMin: 35,
         days: {
           0: { name: 'Chủ Nhật', stations: ['Khánh Hòa', 'Kon Tum', 'T.T.Huế'] },
           1: { name: 'Thứ 2', stations: ['Phú Yên', 'T.T.Huế'] },
@@ -614,9 +172,7 @@
         }
       },
       mb: {
-        shortName: 'Miền Bắc',
-        title: 'Tham khảo Xổ Số miền Bắc',
-        drawHour: 18, drawMin: 35,
+        shortName: 'Miền Bắc', title: 'Tham khảo Xổ Số miền Bắc', drawHour: 18, drawMin: 35,
         days: {
           0: { name: 'Chủ Nhật', stations: ['Thái Bình'] },
           1: { name: 'Thứ 2', stations: ['Hà Nội'] },
@@ -634,94 +190,497 @@
     let currentStations = [];
     let isSpinning = false;
     let activeStep = -1;
-    let spinTimeout = null;
-    let pauseTimeout = null;
-    let finishRecTimeout = null;
-    let animInterval = null;
+    let spinTimeout = null, pauseTimeout = null, finishRecTimeout = null, animInterval = null;
     let totalSteps = 0;
-
     const TICK_SPEED_MS = 220;
 
-    let audioCtx = null;
-    let masterGain = null;
-    let streamDest = null;
-    let isMuted = false;
-    let melodyTimer = null;
-    let stepBeat = 0;
-    let customAudioBuffer = null;
-    let customAudioSource = null;
+    let audioCtx = null, masterGain = null, streamDest = null, isMuted = false;
+    let melodyTimer = null, stepBeat = 0, customAudioBuffer = null, customAudioSource = null;
 
     const traditionalLotteryScore = [
-      [523.25, 392.00, 130.81, 0.16],
-      [659.25, 523.25, 0,      0.16],
-      [783.99, 659.25, 196.00, 0.16],
-      [1046.50,783.99, 130.81, 0.30],
-      [0,      0,      0,      0.12],
-      [783.99, 659.25, 196.00, 0.16],
-      [1046.50,783.99, 130.81, 0.34],
-      [0,      0,      0,      0.14],
-
-      [880.00, 698.46, 174.61, 0.16],
-      [1046.50,880.00, 0,      0.16],
-      [880.00, 698.46, 174.61, 0.16],
-      [783.99, 659.25, 130.81, 0.30],
-      [659.25, 523.25, 196.00, 0.16],
-      [783.99, 659.25, 0,      0.16],
-      [659.25, 523.25, 196.00, 0.16],
-      [523.25, 392.00, 130.81, 0.34],
-
-      [587.33, 440.00, 146.83, 0.16],
-      [698.46, 587.33, 0,      0.16],
-      [880.00, 698.46, 146.83, 0.16],
-      [1174.66,880.00, 196.00, 0.30],
-      [0,      0,      0,      0.12],
-      [987.77, 783.99, 196.00, 0.16],
-      [783.99, 587.33, 0,      0.16],
-      [1174.66,987.77, 196.00, 0.32],
-
-      [1046.50,783.99, 130.81, 0.18],
-      [783.99, 659.25, 196.00, 0.16],
-      [659.25, 523.25, 130.81, 0.16],
-      [783.99, 587.33, 196.00, 0.18],
-      [1046.50,783.99, 130.81, 0.42],
-      [0,      0,      196.00, 0.15],
-      [1046.50,659.25, 130.81, 0.42],
-      [0,      0,      0,      0.15]
+      [523.25, 392.00, 130.81, 0.16], [659.25, 523.25, 0, 0.16], [783.99, 659.25, 196.00, 0.16], [1046.50, 783.99, 130.81, 0.30],
+      [0, 0, 0, 0.12], [783.99, 659.25, 196.00, 0.16], [1046.50, 783.99, 130.81, 0.34], [0, 0, 0, 0.14],
+      [880.00, 698.46, 174.61, 0.16], [1046.50, 880.00, 0, 0.16], [880.00, 698.46, 174.61, 0.16], [783.99, 659.25, 130.81, 0.30],
+      [659.25, 523.25, 196.00, 0.16], [783.99, 659.25, 0, 0.16], [659.25, 523.25, 196.00, 0.16], [523.25, 392.00, 130.81, 0.34],
+      [587.33, 440.00, 146.83, 0.16], [698.46, 587.33, 0, 0.16], [880.00, 698.46, 146.83, 0.16], [1174.66, 880.00, 196.00, 0.30],
+      [0, 0, 0, 0.12], [987.77, 783.99, 196.00, 0.16], [783.99, 587.33, 0, 0.16], [1174.66, 987.77, 196.00, 0.32],
+      [1046.50, 783.99, 130.81, 0.18], [783.99, 659.25, 196.00, 0.16], [659.25, 523.25, 130.81, 0.16], [783.99, 587.33, 196.00, 0.18],
+      [1046.50, 783.99, 130.81, 0.42], [0, 0, 196.00, 0.15], [1046.50, 659.25, 130.81, 0.42], [0, 0, 0, 0.15]
     ];
 
     function ensureAudioContext() {
-      const AudioContextClass = window.AudioContext || window.webkitAudioContext;
-      if (!AudioContextClass) return null;
+      const AC = window.AudioContext || window.webkitAudioContext;
+      if (!AC) return null;
       if (!audioCtx) {
-        audioCtx = new AudioContextClass({ sampleRate: 44100 });
+        audioCtx = new AC({ sampleRate: 44100 });
         masterGain = audioCtx.createGain();
         masterGain.gain.value = isMuted ? 0 : 0.9;
         streamDest = audioCtx.createMediaStreamDestination();
         masterGain.connect(audioCtx.destination);
         masterGain.connect(streamDest);
       }
-      if (audioCtx.state === 'suspended') {
-        audioCtx.resume();
-      }
+      if (audioCtx.state === 'suspended') audioCtx.resume();
       return audioCtx;
     }
 
     function playBrassNote(freq, duration, vol = 0.14) {
       if (!audioCtx || freq <= 0) return;
       const now = audioCtx.currentTime;
-      const osc1 = audioCtx.createOscillator();
-      const osc2 = audioCtx.createOscillator();
-      const filter = audioCtx.createBiquadFilter();
-      const gain = audioCtx.createGain();
+      const osc1 = audioCtx.createOscillator(), osc2 = audioCtx.createOscillator();
+      const filter = audioCtx.createBiquadFilter(), gain = audioCtx.createGain();
+      osc1.type = 'sawtooth'; osc2.type = 'triangle';
+      osc1.frequency.setValueAtTime(freq, now); osc2.frequency.setValueAtTime(freq * 1.003, now);
+      filter.type = 'lowpass'; filter.frequency.setValueAtTime(freq * 2.8, now); filter.Q.value = 2.5;
+      gain.gain.setValueAtTime(0.001, now); gain.gain.linearRampToValueAtTime(vol, now + 0.025); gain.gain.exponentialRampToValueAtTime(0.001, now + duration);
+      osc1.connect(filter); osc2.connect(filter); filter.connect(gain); gain.connect(masterGain);
+      osc1.start(now); osc2.start(now); osc1.stop(now + duration + 0.02); osc2.stop(now + duration + 0.02);
+    }
 
-      osc1.type = 'sawtooth';
-      osc2.type = 'triangle';
-      osc1.frequency.setValueAtTime(freq, now);
-      osc2.frequency.setValueAtTime(freq * 1.003, now);
+    function playBassDrum(freq) {
+      if (!audioCtx || freq <= 0) return;
+      const now = audioCtx.currentTime, osc = audioCtx.createOscillator(), gain = audioCtx.createGain();
+      osc.type = 'sine'; osc.frequency.setValueAtTime(freq * 1.5, now); osc.frequency.exponentialRampToValueAtTime(freq * 0.5, now + 0.14);
+      gain.gain.setValueAtTime(0.22, now); gain.gain.exponentialRampToValueAtTime(0.001, now + 0.16);
+      osc.connect(gain); gain.connect(masterGain); osc.start(now); osc.stop(now + 0.17);
+    }
 
-      filter.type = 'lowpass';
-      filter.frequency.setValueAtTime(freq * 2.8, now);
-      filter.Q.value = 2.5;
+    function playTickSound() {
+      if (isMuted || !audioCtx) return;
+      const now = audioCtx.currentTime, osc = audioCtx.createOscillator(), g = audioCtx.createGain();
+      osc.type = 'sine'; osc.frequency.setValueAtTime(680, now); osc.frequency.exponentialRampToValueAtTime(320, now + 0.035);
+      g.gain.setValueAtTime(0.10, now); g.gain.exponentialRampToValueAtTime(0.001, now + 0.035);
+      osc.connect(g); g.connect(masterGain); osc.start(now); osc.stop(now + 0.04);
+    }
 
-      gain.gain.setValueAtTime(0.001, now);
-      gain.gain.linearRampToValueAtTime(vo
+    function playLockSound(isSpecial = false) {
+      if (isMuted || !audioCtx) return;
+      if (isSpecial) {
+        [523.25, 659.25, 783.99, 1046.50, 1318.51].forEach((f, idx) => {
+          setTimeout(() => { playBrassNote(f, 0.75, 0.22); playBrassNote(f * 0.5, 0.75, 0.15); }, idx * 85);
+        });
+      } else { playBrassNote(1046.50, 0.22, 0.16); }
+    }
+
+    function startBackgroundMusic() {
+      const ctx = ensureAudioContext();
+      if (!ctx) return;
+      stopBackgroundMusic();
+      if (customAudioBuffer) {
+        customAudioSource = ctx.createBufferSource();
+        customAudioSource.buffer = customAudioBuffer; customAudioSource.loop = true;
+        const bgGain = ctx.createGain(); bgGain.gain.value = 0.75;
+        customAudioSource.connect(bgGain); bgGain.connect(masterGain); customAudioSource.start(0);
+        return;
+      }
+      stepBeat = 0;
+      melodyTimer = setInterval(() => {
+        if (isMuted || !audioCtx || !isSpinning) return;
+        const [lF, hF, bF, dur] = traditionalLotteryScore[stepBeat % traditionalLotteryScore.length];
+        stepBeat++;
+        if (lF > 0) playBrassNote(lF, dur, 0.15);
+        if (hF > 0) playBrassNote(hF, dur, 0.09);
+        if (bF > 0) playBassDrum(bF);
+      }, 185);
+    }
+
+    function stopBackgroundMusic() {
+      if (melodyTimer) { clearInterval(melodyTimer); melodyTimer = null; }
+      if (customAudioSource) { try { customAudioSource.stop(); } catch (e) {} customAudioSource = null; }
+    }
+
+    function toggleMute() {
+      isMuted = !isMuted;
+      document.getElementById('muteBtn').textContent = isMuted ? '🔇 Tắt tiếng' : '🔊 Bật tiếng';
+      if (masterGain && audioCtx) masterGain.gain.setValueAtTime(isMuted ? 0 : 0.9, audioCtx.currentTime);
+    }
+
+    function loadCustomMp3(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const ctx = ensureAudioContext();
+      if (!ctx) return;
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        ctx.decodeAudioData(e.target.result, function(buffer) {
+          customAudioBuffer = buffer;
+          document.getElementById('mp3Btn').textContent = '🎵 Đã lưu MP3';
+          document.getElementById('subTitle').textContent = 'Đang dùng nhạc: ' + file.name;
+        });
+      };
+      reader.readAsArrayBuffer(file);
+    }
+
+    function updateTabHighlight() {
+      ['mn', 'mt', 'mb'].forEach(r => {
+        document.getElementById('tab-' + r).classList.toggle('active', r === currentRegion);
+      });
+      document.getElementById('mainTitle').textContent = schedulesByRegion[currentRegion].title;
+    }
+
+    function selectRegionTab(regionKey) {
+      if (isSpinning) stopSpin(false);
+      currentRegion = regionKey;
+      updateTabHighlight();
+      const now = new Date(), todayIdx = now.getDay(), tomorrowIdx = (todayIdx + 1) % 7;
+      const regConfig = schedulesByRegion[currentRegion];
+      const isAfterDraw = (now.getHours() * 60 + now.getMinutes()) >= (regConfig.drawHour * 60 + regConfig.drawMin);
+      currentDayIdx = isAfterDraw ? tomorrowIdx : todayIdx;
+      currentStations = regConfig.days[currentDayIdx].stations;
+      document.getElementById('daySelect').value = currentRegion + '_' + currentDayIdx;
+      document.getElementById('downloadBtn').classList.remove('ready');
+      initTable();
+    }
+
+    function initDaySelector() {
+      const select = document.getElementById('daySelect');
+      select.innerHTML = '';
+      const now = new Date(), todayIdx = now.getDay(), tomorrowIdx = (todayIdx + 1) % 7;
+      const orderedIndices = [todayIdx, tomorrowIdx];
+      for (let i = 0; i < 7; i++) { if (i !== todayIdx && i !== tomorrowIdx) orderedIndices.push(i); }
+
+      ['mn', 'mt', 'mb'].forEach(regKey => {
+        const regConfig = schedulesByRegion[regKey];
+        const group = document.createElement('optgroup');
+        group.label = '=== XỔ SỐ ' + regConfig.shortName.toUpperCase() + ' ===';
+        orderedIndices.forEach(idx => {
+          const info = regConfig.days[idx], opt = document.createElement('option');
+          opt.value = regKey + '_' + idx;
+          const prefix = (idx === todayIdx) ? '[Hôm nay] ' : (idx === tomorrowIdx ? '[Ngày mai] ' : '');
+          opt.textContent = regConfig.shortName + ' - ' + prefix + info.name + ' (' + info.stations.join(', ') + ')';
+          group.appendChild(opt);
+        });
+        select.appendChild(group);
+      });
+
+      const regConfig = schedulesByRegion[currentRegion];
+      const isAfterDraw = (now.getHours() * 60 + now.getMinutes()) >= (regConfig.drawHour * 60 + regConfig.drawMin);
+      currentDayIdx = isAfterDraw ? tomorrowIdx : todayIdx;
+      select.value = currentRegion + '_' + currentDayIdx;
+      currentStations = regConfig.days[currentDayIdx].stations;
+      updateTabHighlight();
+    }
+
+    function changeDayFromDropdown() {
+      if (isSpinning) stopSpin(false);
+      const parts = document.getElementById('daySelect').value.split('_');
+      currentRegion = parts[0];
+      currentDayIdx = parseInt(parts[1], 10);
+      currentStations = schedulesByRegion[currentRegion].days[currentDayIdx].stations;
+      updateTabHighlight();
+      document.getElementById('downloadBtn').classList.remove('ready');
+      initTable();
+    }
+
+    function initTable() {
+      const wrapper = document.getElementById('tableWrapper');
+      const thead = document.getElementById('tableHeader');
+      const tbody = document.getElementById('tableBody');
+      wrapper.classList.remove('mode-4-cols');
+
+      if (currentRegion === 'mb') {
+        thead.style.display = 'none';
+        tbody.innerHTML = '';
+        prizeConfigMB.forEach(prize => {
+          const row = document.createElement('div');
+          row.className = 'prize-row ' + prize.class;
+          row.innerHTML = '<div class="col-giai">' + prize.label + '</div>';
+          const gridContainer = document.createElement('div');
+          gridContainer.className = 'mb-grid-container';
+          for (let r = 0; r < prize.rows; r++) {
+            const subRow = document.createElement('div');
+            subRow.className = 'mb-sub-row';
+            const stepId = prize.spinSteps[r];
+            for (let c = 0; c < prize.cols; c++) {
+              const cell = document.createElement('div');
+              cell.className = 'num-cell step-group-' + stepId;
+              cell.dataset.digits = prize.digits;
+              cell.dataset.fullval = '';
+              cell.textContent = '•••';
+              subRow.appendChild(cell);
+            }
+            gridContainer.appendChild(subRow);
+          }
+          row.appendChild(gridContainer);
+          tbody.appendChild(row);
+        });
+        totalSteps = 10;
+      } else {
+        thead.style.display = 'flex';
+        if (currentStations.length === 4) wrapper.classList.add('mode-4-cols');
+        thead.innerHTML = '<div class="col-giai">Giải</div>';
+        currentStations.forEach(stName => {
+          const div = document.createElement('div');
+          div.className = 'col-station';
+          div.textContent = stName;
+          thead.appendChild(div);
+        });
+        tbody.innerHTML = '';
+        let stepIndex = 0;
+        prizeConfigMNMT.forEach(prize => {
+          const row = document.createElement('div');
+          row.className = 'prize-row ' + prize.class;
+          row.innerHTML = '<div class="col-giai">' + prize.label + '</div>';
+          for (let s = 0; s < currentStations.length; s++) {
+            const colSt = document.createElement('div');
+            colSt.className = 'col-station';
+            for (let c = 0; c < prize.count; c++) {
+              const curStep = stepIndex + c;
+              const cell = document.createElement('div');
+              cell.className = 'num-cell step-group-' + curStep;
+              cell.id = 'cell-s' + s + '-step' + curStep;
+              cell.dataset.digits = prize.digits;
+              cell.dataset.fullval = '';
+              cell.textContent = '•••';
+              colSt.appendChild(cell);
+            }
+            row.appendChild(colSt);
+          }
+          stepIndex += prize.count;
+          tbody.appendChild(row);
+        });
+        totalSteps = stepIndex;
+      }
+    }
+
+    function randomNum(digits) {
+      let res = '';
+      for (let i = 0; i < digits; i++) res += Math.floor(Math.random() * 10);
+      return res;
+    }
+
+    function formatByMode(val) {
+      if (!val) return '•••';
+      const mode = document.querySelector('input[name="viewMode"]:checked').value;
+      return mode === '2' ? val.slice(-2) : (mode === '3' ? val.slice(-3) : val);
+    }
+
+    function updateDisplayMode() {
+      document.querySelectorAll('.num-cell').forEach(cell => {
+        if (cell.dataset.fullval) cell.textContent = formatByMode(cell.dataset.fullval);
+      });
+    }
+
+    function resetBoard() {
+      document.querySelectorAll('.num-cell').forEach(cell => {
+        cell.classList.remove('active-spin');
+        cell.dataset.fullval = '';
+        cell.textContent = '•••';
+      });
+    }
+
+    function openModal() { if (lastVideoBlob) document.getElementById('videoModal').classList.add('show'); }
+    function closeModal() { document.getElementById('videoModal').classList.remove('show'); }
+
+    function drawVideoFrame() {
+      const canvas = document.getElementById('videoCanvas'), ctx = canvas.getContext('2d');
+      const W = canvas.width, H = canvas.height;
+      ctx.fillStyle = '#ffffff'; ctx.fillRect(0, 0, W, H);
+      ctx.fillStyle = '#0b4a92'; ctx.fillRect(0, 0, W, 62);
+      ctx.fillStyle = '#ffffff'; ctx.font = 'bold 28px sans-serif'; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+      ctx.fillText('←   Quay thử', 24, 31);
+
+      ctx.fillStyle = '#ebebeb'; ctx.fillRect(0, 62, W, 66);
+      ctx.fillStyle = '#ffffff'; ctx.strokeStyle = '#cccccc'; ctx.lineWidth = 2;
+      ctx.fillRect(16, 72, 460, 46); ctx.strokeRect(16, 72, 460, 46);
+
+      const dayInfo = schedulesByRegion[currentRegion].days[currentDayIdx];
+      const dayText = dayInfo.name + ' (' + dayInfo.stations.join(', ') + ')';
+      ctx.fillStyle = '#222222'; ctx.font = '600 22px sans-serif';
+      ctx.fillText(dayText.substring(0, 28), 28, 95);
+
+      ctx.fillStyle = isSpinning ? '#d9430f' : '#f37021';
+      ctx.fillRect(496, 72, 208, 46);
+      ctx.fillStyle = '#ffffff'; ctx.font = 'bold 23px sans-serif'; ctx.textAlign = 'center';
+      ctx.fillText(isSpinning ? 'DỪNG' : 'QUAY THỬ', 600, 95);
+
+      ctx.fillStyle = '#d32f2f'; ctx.font = 'bold 29px sans-serif';
+      ctx.fillText(schedulesByRegion[currentRegion].title, W / 2, 152);
+      ctx.fillStyle = '#666666'; ctx.font = '21px sans-serif';
+      ctx.fillText('Thông tin chỉ mang tính tham khảo', W / 2, 180);
+
+      const giaiW = W * 0.11, footerH = 56;
+      if (currentRegion === 'mb') {
+        const bodyTop = 196, bodyH = H - bodyTop - footerH, unitH = bodyH / 10;
+        let curUnit = 0;
+        prizeConfigMB.forEach(prize => {
+          const rowTop = bodyTop + curUnit * unitH, rowH = prize.rows * unitH;
+          ctx.fillStyle = '#fafafa'; ctx.fillRect(0, rowTop, giaiW, rowH);
+          ctx.fillStyle = (prize.label === 'ĐB' || prize.label === '7') ? '#d32f2f' : '#333333';
+          ctx.font = 'bold 25px sans-serif'; ctx.fillText(prize.label, giaiW / 2, rowTop + rowH / 2);
+          const colW = (W - giaiW) / prize.cols;
+          for (let r = 0; r < prize.rows; r++) {
+            const subTop = rowTop + r * unitH, stepId = prize.spinSteps[r];
+            const domCells = document.querySelectorAll('.step-group-' + stepId);
+            if (stepId === activeStep) { ctx.fillStyle = '#fff176'; ctx.fillRect(giaiW, subTop, W - giaiW, unitH); }
+            for (let c = 0; c < prize.cols; c++) {
+              const textVal = domCells[c] ? domCells[c].textContent : '•••';
+              ctx.fillStyle = (prize.label === 'ĐB' || prize.label === '7') ? '#d32f2f' : '#111111';
+              ctx.font = prize.label === 'ĐB' ? 'bold 42px sans-serif' : 'bold 34px sans-serif';
+              ctx.fillText(textVal, giaiW + c * colW + colW / 2, subTop + unitH / 2);
+            }
+          }
+          ctx.strokeStyle = '#dcdcdc'; ctx.beginPath(); ctx.moveTo(0, rowTop + rowH); ctx.lineTo(W, rowTop + rowH); ctx.stroke();
+          curUnit += prize.rows;
+        });
+      } else {
+        const headerY = 196, headerH = 46, numStations = currentStations.length, stW = (W - giaiW) / numStations;
+        ctx.fillStyle = '#f5f5f5'; ctx.fillRect(0, headerY, W, headerH);
+        ctx.fillStyle = '#111111'; ctx.font = 'bold 24px sans-serif';
+        ctx.fillText('Giải', giaiW / 2, headerY + headerH / 2);
+        currentStations.forEach((st, i) => ctx.fillText(st, giaiW + i * stW + stW / 2, headerY + headerH / 2));
+        const bodyTop = headerY + headerH, stepH = (H - bodyTop - footerH) / 18;
+        let stepIdx = 0;
+        prizeConfigMNMT.forEach(prize => {
+          const rowTop = bodyTop + stepIdx * stepH, rowH = prize.count * stepH;
+          ctx.fillStyle = '#fafafa'; ctx.fillRect(0, rowTop, giaiW, rowH);
+          ctx.fillStyle = (prize.label === 'ĐB') ? '#d32f2f' : '#333333';
+          ctx.font = 'bold 24px sans-serif'; ctx.fillText(prize.label, giaiW / 2, rowTop + rowH / 2);
+          for (let c = 0; c < prize.count; c++) {
+            const curStep = stepIdx + c, cellTop = rowTop + c * stepH;
+            if (curStep === activeStep) { ctx.fillStyle = '#fff176'; ctx.fillRect(giaiW, cellTop, W - giaiW, stepH); }
+            for (let s = 0; s < numStations; s++) {
+              const domCell = document.getElementById('cell-s' + s + '-step' + curStep);
+              const textVal = domCell ? domCell.textContent : '•••';
+              ctx.fillStyle = (prize.label === '8' || prize.label === 'ĐB') ? '#d32f2f' : '#111111';
+              ctx.font = numStations === 4 ? 'bold 29px sans-serif' : 'bold 33px sans-serif';
+              ctx.fillText(textVal, giaiW + s * stW + stW / 2, cellTop + stepH / 2);
+            }
+          }
+          ctx.strokeStyle = '#dcdcdc'; ctx.beginPath(); ctx.moveTo(0, rowTop + rowH); ctx.lineTo(W, rowTop + rowH); ctx.stroke();
+          stepIdx += prize.count;
+        });
+      }
+    }
+
+    let mediaRecorder = null, recordedChunks = [], frameIntervalId = null, recStartTime = 0, lastVideoBlob = null, lastVideoExt = 'mp4';
+
+    function startVideoRecording() {
+      const canvas = document.getElementById('videoCanvas');
+      ensureAudioContext();
+      document.getElementById('downloadBtn').classList.remove('ready');
+      closeModal();
+      lastVideoBlob = null;
+      recStartTime = Date.now();
+      drawVideoFrame();
+      if (!canvas.captureStream || typeof MediaRecorder === 'undefined') return;
+      const vStream = canvas.captureStream(30);
+      const tracks = [...vStream.getVideoTracks()];
+      if (streamDest && streamDest.stream.getAudioTracks().length > 0) tracks.push(streamDest.stream.getAudioTracks()[0]);
+      const combinedStream = new MediaStream(tracks);
+      recordedChunks = [];
+      const mimeTypes = ['video/mp4', 'video/webm;codecs=h264,opus', 'video/webm;codecs=vp8,opus', 'video/webm'];
+      let selectedMime = '';
+      for (const m of mimeTypes) { if (MediaRecorder.isTypeSupported(m)) { selectedMime = m; break; } }
+      mediaRecorder = selectedMime ? new MediaRecorder(combinedStream, { mimeType: selectedMime, videoBitsPerSecond: 2500000 }) : new MediaRecorder(combinedStream);
+      mediaRecorder.ondataavailable = (e) => { if (e.data && e.data.size > 0) recordedChunks.push(e.data); };
+      mediaRecorder.onstop = () => {
+        const durationMs = Date.now() - recStartTime;
+        const rawBlob = new Blob(recordedChunks, { type: selectedMime || 'video/webm' });
+        if (typeof ysFixWebmDuration === 'function' && (!selectedMime || selectedMime.includes('webm'))) {
+          ysFixWebmDuration(rawBlob, durationMs, (fixedBlob) => { lastVideoBlob = fixedBlob; lastVideoExt = 'webm'; showReadyUI(Math.round(durationMs / 1000)); });
+        } else {
+          lastVideoBlob = rawBlob; lastVideoExt = (selectedMime && selectedMime.includes('mp4')) ? 'mp4' : 'webm'; showReadyUI(Math.round(durationMs / 1000));
+        }
+      };
+      mediaRecorder.start();
+      document.getElementById('recBadge').classList.add('recording');
+      if (frameIntervalId) clearInterval(frameIntervalId);
+      frameIntervalId = setInterval(() => {
+        drawVideoFrame();
+        const elapsed = Math.floor((Date.now() - recStartTime) / 1000);
+        document.getElementById('recTimerText').textContent = String(Math.floor(elapsed / 60)).padStart(2, '0') + ':' + String(elapsed % 60).padStart(2, '0');
+      }, 33);
+    }
+
+    function stopVideoRecording(showPopup = true) {
+      document.getElementById('recBadge').classList.remove('recording');
+      stopBackgroundMusic();
+      if (frameIntervalId) { clearInterval(frameIntervalId); frameIntervalId = null; }
+      if (mediaRecorder && mediaRecorder.state === 'recording') {
+        if (!showPopup) mediaRecorder.onstop = null;
+        mediaRecorder.stop();
+      }
+    }
+
+    function showReadyUI(durationSec) {
+      document.getElementById('modalDesc').textContent = 'Video (' + schedulesByRegion[currentRegion].title + ') dài ' + durationSec + ' giây đã sẵn sàng:';
+      document.getElementById('downloadBtn').classList.add('ready');
+      document.getElementById('videoModal').classList.add('show');
+    }
+
+    async function shareVideoNow() {
+      if (!lastVideoBlob) return;
+      const fileName = 'xs-' + currentRegion + '-' + Date.now() + '.' + lastVideoExt;
+      const file = new File([lastVideoBlob], fileName, { type: lastVideoBlob.type });
+      if (navigator.canShare && navigator.canShare({ files: [file] })) {
+        try { await navigator.share({ files: [file], title: schedulesByRegion[currentRegion].title }); return; } catch (e) {}
+      }
+      downloadVideoNow();
+    }
+
+    function downloadVideoNow() {
+      if (!lastVideoBlob) return;
+      const url = URL.createObjectURL(lastVideoBlob), a = document.createElement('a');
+      a.href = url; a.download = 'xs-' + currentRegion + '-' + Date.now() + '.' + lastVideoExt;
+      document.body.appendChild(a); a.click();
+      setTimeout(() => { document.body.removeChild(a); URL.revokeObjectURL(url); }, 4000);
+      closeModal();
+    }
+
+    function toggleSpin() { isSpinning ? stopSpin(true) : startSpin(); }
+
+    function startSpin() {
+      clearTimeout(finishRecTimeout);
+      isSpinning = true; activeStep = 0;
+      const btn = document.getElementById('spinBtn');
+      btn.textContent = 'DỪNG'; btn.classList.add('spinning');
+      resetBoard(); startBackgroundMusic(); startVideoRecording(); runStep(0);
+    }
+
+    function stopSpin(saveVideo = true) {
+      isSpinning = false; activeStep = -1;
+      clearTimeout(spinTimeout); clearTimeout(pauseTimeout); clearTimeout(finishRecTimeout); clearInterval(animInterval);
+      const btn = document.getElementById('spinBtn');
+      btn.textContent = 'QUAY THỬ'; btn.classList.remove('spinning');
+      document.querySelectorAll('.num-cell.active-spin').forEach(c => c.classList.remove('active-spin'));
+      if (saveVideo) {
+        drawVideoFrame();
+        finishRecTimeout = setTimeout(() => stopVideoRecording(true), 2500);
+      } else { stopVideoRecording(false); }
+    }
+
+    function runStep(step) {
+      if (!isSpinning || step >= totalSteps) { stopSpin(true); return; }
+      activeStep = step;
+      const currentCells = Array.from(document.querySelectorAll('.step-group-' + step));
+      if (!currentCells.length) { stopSpin(true); return; }
+      const digits = parseInt(currentCells[0].dataset.digits, 10);
+      const stepSpinTime = currentRegion === 'mb' ? 2800 : 1550;
+      const stepPauseTime = currentRegion === 'mb' ? 300 : 250;
+
+      currentCells.forEach(cell => { cell.classList.add('active-spin'); cell.textContent = formatByMode(randomNum(digits)); });
+      playTickSound();
+      animInterval = setInterval(() => {
+        currentCells.forEach(cell => cell.textContent = formatByMode(randomNum(digits)));
+        playTickSound();
+      }, TICK_SPEED_MS);
+
+      spinTimeout = setTimeout(() => {
+        clearInterval(animInterval);
+        currentCells.forEach(cell => {
+          const finalVal = randomNum(digits);
+          cell.dataset.fullval = finalVal;
+          cell.textContent = formatByMode(finalVal);
+          cell.classList.remove('active-spin');
+        });
+        playLockSound(step === totalSteps - 1);
+        activeStep = -1;
+        pauseTimeout = setTimeout(() => runStep(step + 1), stepPauseTime);
+      }, stepSpinTime);
+    }
+
+    initDaySelector();
+    initTable();
+  </script>
+</body>
+</html>
