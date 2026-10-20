@@ -2,7 +2,7 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Quay Thử XSKT Miền Nam</title>
     <style>
         * {
@@ -15,23 +15,24 @@
             background-color: #f0f0f0;
             display: flex;
             justify-content: center;
-            align-items: center;
+            align-items: flex-start;
             min-height: 100vh;
+            padding: 5px;
         }
         .container {
             width: 100%;
-            max-width: 900px;
+            max-width: 600px;
             background: #fff;
-            border: 3px solid #ffcc00;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            border: 2px solid #ffcc00;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
         }
         /* Header */
         .header {
             background-color: #ffcc00;
             color: #cc0000;
             text-align: center;
-            padding: 12px;
-            font-size: 22px;
+            padding: 10px;
+            font-size: 16px;
             font-weight: bold;
         }
         /* Bảng kết quả */
@@ -42,68 +43,62 @@
         }
         th, td {
             border: 1px solid #ddd;
-            padding: 8px;
-            font-size: 16px;
+            padding: 5px 2px;
+            font-size: 13px;
         }
         th {
             background-color: #fff;
             color: #cc0000;
-            font-size: 18px;
+            font-size: 14px;
             text-transform: uppercase;
-            width: 33.33%;
         }
         .prize-label {
-            width: 80px;
+            width: 55px;
             background-color: #f9f9f9;
             font-weight: bold;
             color: #333;
-            font-size: 14px;
+            font-size: 12px;
         }
         .number-cell {
             font-weight: bold;
-            letter-spacing: 1px;
-            height: 35px;
+            letter-spacing: 0.5px;
+            height: 28px;
         }
         .red-text {
             color: #cc0000;
-            font-size: 24px;
+            font-size: 18px;
             font-weight: bold;
         }
         .blue-text {
             color: #0000cc;
-            font-size: 20px;
+            font-size: 15px;
             font-weight: bold;
         }
         .black-text {
             color: #000;
-            font-size: 18px;
-        }
-        /* Footer con số may mắn */
-        .footer-banner {
-            background-color: #00b050;
-            color: #ffff00;
-            text-align: center;
-            padding: 15px;
-            font-size: 26px;
-            font-weight: bold;
-            text-transform: uppercase;
-            border-top: 3px solid #ffcc00;
+            font-size: 14px;
         }
         /* Khu vực điều khiển */
         .controls {
             text-align: center;
-            padding: 15px;
+            padding: 10px;
             background: #e9e9e9;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            align-items: center;
         }
         .controls button {
             background-color: #cc0000;
             color: white;
             border: none;
-            padding: 10px 20px;
-            font-size: 18px;
+            padding: 10px 15px;
+            font-size: 15px;
             font-weight: bold;
             cursor: pointer;
             border-radius: 5px;
+            width: 100%;
+            max-width: 300px;
         }
         .controls button:hover {
             background-color: #990000;
@@ -112,21 +107,26 @@
             background-color: #cccccc;
             cursor: not-allowed;
         }
+        #status-text {
+            font-size: 12px;
+            color: #555;
+            font-style: italic;
+        }
     </style>
 </head>
 <body>
 
-<div class="container">
+<div class="container" id="capture-area">
     <!-- Tiêu đề cập nhật động -->
     <div class="header" id="header-title">
         QUAY THỬ XSKT MIỀN NAM, THỨ..., NGÀY .../.../......
     </div>
 
-    <!-- Bảng kết quả xổ số (Ví dụ 3 đài: Bến Tre, Vũng Tàu, Bạc Liêu) -->
+    <!-- Bảng kết quả xổ số (3 đài: Bến Tre, Vũng Tàu, Bạc Liêu) -->
     <table>
         <thead>
             <tr>
-                <th style="width: 80px;"></th>
+                <th style="width: 55px;"></th>
                 <th>BẾN TRE</th>
                 <th>VŨNG TÀU</th>
                 <th>BẠC LIÊU</th>
@@ -137,19 +137,14 @@
         </tbody>
     </table>
 
-    <!-- Banner cuối -->
-    <div class="footer-banner">
-        CON SỐ MAY MẮN
-    </div>
-
     <!-- Nút bấm điều khiển -->
     <div class="controls">
-        <button id="start-btn" onclick="startQuayThu()">BẮT ĐẦU QUAY THỬ</button>
+        <button id="start-btn" onclick="startQuayThu()">BẮT ĐẦU QUAY THỬ & QUAY VIDEO</button>
+        <span id="status-text">Nhấn bắt đầu để quay số và tự động ghi hình lưu về máy.</span>
     </div>
 </div>
 
 <script>
-    // Cấu hình các giải và số lượng chữ số của từng giải miền Nam
     const prizes = [
         { name: "8", digits: 2, class: "red-text" },
         { name: "7", digits: 3, class: "blue-text" },
@@ -162,7 +157,6 @@
         { name: "ĐB", digits: 6, class: "red-text" }
     ];
 
-    // Tự động cập nhật thứ, ngày, tháng, năm hiện tại
     function updateHeaderDate() {
         const days = ["CHỦ NHẬT", "THỨ HAI", "THỨ BA", "THỨ TƯ", "THỨ NĂM", "THỨ SÁU", "THỨ BẢY"];
         const now = new Date();
@@ -174,7 +168,6 @@
         document.getElementById("header-title").innerText = `QUAY THỬ XSKT MIỀN NAM, ${dayName}, NGÀY ${date}/${month}/${year}`;
     }
 
-    // Khởi tạo bảng trống
     function initTable() {
         const tbody = document.getElementById("lottery-body");
         tbody.innerHTML = "";
@@ -188,7 +181,6 @@
                 if (i === 0) labelCell.innerText = `Giải ${p.name}`;
                 row.appendChild(labelCell);
 
-                // 3 đài tương ứng 3 cột
                 for (let col = 0; col < 3; col++) {
                     let td = document.createElement("td");
                     td.className = `number-cell ${p.class}`;
@@ -201,19 +193,63 @@
         });
     }
 
-    // Tạo số ngẫu nhiên có đủ số chữ số (thêm số 0 phía trước nếu thiếu)
     function getRandomNumber(digits) {
         let max = Math.pow(10, digits);
         let numStr = Math.floor(Math.random() * max).toString();
         return numStr.padStart(digits, '0');
     }
 
-    // Hiệu ứng quay thử
-    function startQuayThu() {
+    let mediaRecorder;
+    let recordedChunks = [];
+
+    async function startQuayThu() {
         const btn = document.getElementById("start-btn");
+        const statusText = document.getElementById("status-text");
         btn.disabled = true;
         initTable();
 
+        // Bắt đầu quay video màn hình khu vực bảng
+        try {
+            const containerElem = document.getElementById("capture-area");
+            // Sử dụng getDisplayMedia hoặc stream từ canvas/element nếu hỗ trợ
+            const stream = await navigator.mediaDevices.getDisplayMedia({ 
+                video: { mediaSource: "screen" },
+                audio: false 
+            });
+            
+            mediaRecorder = new MediaRecorder(stream, { mimeType: 'video/webm; codecs=vp9' });
+            recordedChunks = [];
+
+            mediaRecorder.ondataavailable = function(e) {
+                if (e.data.size > 0) {
+                    recordedChunks.push(e.data);
+                }
+            };
+
+            mediaRecorder.onstop = function() {
+                const blob = new Blob(recordedChunks, { type: 'video/webm' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.style.display = 'none';
+                a.href = url;
+                a.download = `quay-thu-xskt-${Date.now()}.webm`;
+                document.body.appendChild(a);
+                a.click();
+                setTimeout(() => {
+                    document.body.removeChild(a);
+                    window.URL.revokeObjectURL(url);
+                }, 100);
+                statusText.innerText = "Đã quay và tải video thành công!";
+            };
+
+            mediaRecorder.start();
+            statusText.innerText = "Đang quay video và chạy kết quả...";
+        } catch (err) {
+            console.log("Không thể bật quay màn hình tự động hoặc bị hủy: ", err);
+            statusText.innerText = "Chạy quay số (Không quay được video do trình duyệt từ chối quyền).";
+        }
+
+        // Tạo danh sách các ô cần quay số
         let queue = [];
         prizes.forEach(p => {
             let count = p.count || 1;
@@ -231,27 +267,33 @@
                 let item = queue[index];
                 let cell = document.getElementById(item.id);
                 
-                // Hiệu ứng chạy số nhanh trong 400ms trước khi ra kết quả chính thức
                 let counter = 0;
                 let interval = setInterval(() => {
                     cell.innerText = getRandomNumber(item.digits);
                     counter++;
-                    if (counter > 8) {
+                    if (counter > 6) {
                         clearInterval(interval);
-                        cell.innerText = getRandomNumber(item.digits); // Chốt số cuối cùng
+                        cell.innerText = getRandomNumber(item.digits);
                         index++;
-                        setTimeout(runStep, 100); // Tốc độ quay giữa các ô
+                        setTimeout(runStep, 80);
                     }
-                }, 40);
+                }, 30);
             } else {
-                btn.disabled = false;
+                // Kết thúc quay số, dừng quay video sau 1 giây
+                setTimeout(() => {
+                    if (mediaRecorder && mediaRecorder.state !== "inactive") {
+                        mediaRecorder.stop();
+                        // Dừng các track stream màn hình
+                        mediaRecorder.stream.getTracks().forEach(track => track.stop());
+                    }
+                    btn.disabled = false;
+                }, 1000);
             }
         }
 
         runStep();
     }
 
-    // Chạy khi tải trang
     window.onload = function() {
         updateHeaderDate();
         initTable();
