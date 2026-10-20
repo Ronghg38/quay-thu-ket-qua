@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Quay Thử XSKT Miền Nam</title>
-    <!-- Nhúng thư viện ghi hình MediaStreamRecorder/RecordRTC để hỗ trợ lưu video ổn định -->
+    <!-- Thư viện hỗ trợ ghi hình video trực tiếp từ trình duyệt -->
     <script src="https://www.jsdelivr.com/package/npm/recordrtc"></script>
     <style>
         * {
@@ -16,11 +16,50 @@
         body {
             background-color: #f0f0f0;
             display: flex;
-            justify-content: center;
-            align-items: flex-start;
+            flex-direction: column;
+            align-items: center;
             min-height: 100vh;
             padding: 5px;
         }
+        /* Bảng tùy chỉnh ngày và đài */
+        .config-panel {
+            width: 100%;
+            max-width: 600px;
+            background: #fff;
+            border: 2px solid #ccc;
+            padding: 10px;
+            margin-bottom: 8px;
+            border-radius: 5px;
+            font-size: 13px;
+        }
+        .config-panel label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 3px;
+            color: #333;
+        }
+        .config-panel input, .config-panel select {
+            width: 100%;
+            padding: 6px;
+            margin-bottom: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 13px;
+        }
+        .station-checkboxes {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+        .station-checkboxes label {
+            font-weight: normal;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            cursor: pointer;
+        }
+
         .container {
             width: 100%;
             max-width: 600px;
@@ -33,7 +72,7 @@
             color: #cc0000;
             text-align: center;
             padding: 10px;
-            font-size: 16px;
+            font-size: 15px;
             font-weight: bold;
         }
         table {
@@ -49,7 +88,7 @@
         th {
             background-color: #fff;
             color: #cc0000;
-            font-size: 14px;
+            font-size: 13px;
             text-transform: uppercase;
         }
         .prize-label {
@@ -66,17 +105,17 @@
         }
         .red-text {
             color: #cc0000;
-            font-size: 18px;
+            font-size: 17px;
             font-weight: bold;
         }
         .blue-text {
             color: #0000cc;
-            font-size: 15px;
+            font-size: 14px;
             font-weight: bold;
         }
         .black-text {
             color: #000;
-            font-size: 14px;
+            font-size: 13px;
         }
         .controls {
             text-align: center;
@@ -110,10 +149,22 @@
             font-size: 12px;
             color: #555;
             font-style: italic;
+            line-height: 1.4;
         }
     </style>
 </head>
 <body>
+
+    <!-- Bảng tùy chỉnh ngày tháng và chọn đài -->
+    <div class="config-panel">
+        <label for="input-date">Chọn Ngày Quay Thử:</label>
+        <input type="date" id="input-date" onchange="onDateOrStationChange()">
+
+        <label>Chọn Đài Miền Nam (Tối đa 4 đài):</label>
+        <div class="station-checkboxes" id="station-list-container">
+            <!-- Được tạo tự động bằng JS -->
+        </div>
+    </div>
 
 <div class="container" id="capture-area">
     <div class="header" id="header-title">
@@ -127,6 +178,7 @@
                 <th id="dai-0">ĐÀI 1</th>
                 <th id="dai-1">ĐÀI 2</th>
                 <th id="dai-2" style="display:none;">ĐÀI 3</th>
+                <th id="dai-3" style="display:none;">ĐÀI 4</th>
             </tr>
         </thead>
         <tbody id="lottery-body">
@@ -134,21 +186,32 @@
     </table>
 
     <div class="controls">
-        <button id="start-btn" onclick="startQuayThu()">BẮT ĐẦU QUAY THỬ & LƯU VIDEO</button>
-        <span id="status-text">Hệ thống sẵn sàng. Thời gian quay khoảng 1 phút 30 giây.</span>
+        <button id="start-btn" onclick="startQuayThu()">BẮT ĐẦU QUAY THỬ (1 PHÚT 30 GIÂY)</button>
+        <span id="status-text">Hệ thống sẵn sàng. Nhấn nút để bắt đầu quay số chậm rãi.</span>
     </div>
 </div>
 
 <script>
-    // Lịch các đài quay miền Nam theo thứ trong tuần (0: Chủ Nhật -> 6: Thứ Bảy)
-    const schedule = {
-        0: ["KẾT SÁNG", "ĐÀ LAT", "KIÊN GIANG", "TIỀN GIANG"], // Chủ Nhật (3 đài)
-        1: ["TP. HỒ CHÍ MINH", "ĐỒNG THÁP", "CÀ MAU"],          // Thứ Hai
-        2: ["BẾN TRE", "VŨNG TÀU", "BẠC LIÊU"],                // Thứ Ba
-        3: ["ĐỒNG NAI", "CẦN THƠ", "SÓC TRĂNG"],               // Thứ Tư
-        4: ["TÂY NINH", "AN GIANG", "BÌNH THUẬN"],             // Thứ Năm
-        5: ["VĨNH LONG", "BÌNH DƯƠNG", "TRÀ VINH"],            // Thứ Sáu
-        6: ["TP. HỒ CHÍ MINH", "LONG AN", "BÌNH PHƯỚC", "HẬU GIANG"] // Thứ Bảy (4 đài)
+    // Danh sách toàn bộ các đài miền Nam trong tuần
+    const allStations = [
+        "TP. HỒ CHÍ MINH", "ĐỒNG THÁP", "CÀ MAU", 
+        "BẾN TRE", "VŨNG TÀU", "BẠC LIÊU", 
+        "ĐỒNG NAI", "CẦN THƠ", "SÓC TRĂNG", 
+        "TÂY NINH", "AN GIANG", "BÌNH THUẬN", 
+        "VĨNH LONG", "BÌNH DƯƠNG", "TRÀ VINH", 
+        "LONG AN", "BÌNH PHƯỚC", "HẬU GIANG", 
+        "ĐÀ LAT", "KIÊN GIANG", "TIỀN GIANG"
+    ];
+
+    // Lịch mặc định theo thứ trong tuần (0: Chủ Nhật -> 6: Thứ Bảy)
+    const defaultSchedule = {
+        0: ["TIỀN GIANG", "KIÊN GIANG", "ĐÀ LAT"],
+        1: ["TP. HỒ CHÍ MINH", "ĐỒNG THÁP", "CÀ MAU"],
+        2: ["BẾN TRE", "VŨNG TÀU", "BẠC LIÊU"],
+        3: ["ĐỒNG NAI", "CẦN THƠ", "SÓC TRĂNG"],
+        4: ["TÂY NINH", "AN GIANG", "BÌNH THUẬN"],
+        5: ["VĨNH LONG", "BÌNH DƯƠNG", "TRÀ VINH"],
+        6: ["TP. HỒ CHÍ MINH", "LONG AN", "BÌNH PHƯỚC", "HẬU GIANG"]
     };
 
     const prizes = [
@@ -165,44 +228,87 @@
 
     let currentDaiList = [];
 
-    // Lấy thông tin ngày và đài dựa trên mốc 16:30 chiều
-    getTargetDateAndStations = function() {
+    // Khởi tạo ngày mặc định (tính theo mốc 16:30 chiều)
+    function initDefaultDate() {
         let now = new Date();
         let hours = now.getHours();
         let minutes = now.getMinutes();
 
-        // Sau 16:30 (16h30) thì tự động tính sang ngày tiếp theo
+        // Sau 16:30 tự động nhảy sang ngày hôm sau
         if (hours > 16 || (hours === 16 && minutes >= 30)) {
             now.setDate(now.getDate() + 1);
         }
 
-        let dayOfWeek = now.getDay(); // 0 là Chủ Nhật, 1 là Thứ Hai...
-        let daysText = ["CHỦ NHẬT", "THỨ HAI", "THỨ BA", "THỨ TƯ", "THỨ NĂM", "THỨ SÁU", "THỨ BẢY"];
-        let dayName = daysText[dayOfWeek];
-
-        let dateStr = String(now.getDate()).padStart(2, '0') + '/' + 
-                      String(now.getMonth() + 1).padStart(2, '0') + '/' + 
-                      now.getFullYear();
-
-        return {
-            dayName: dayName,
-            dateStr: dateStr,
-            stations: schedule[dayOfWeek]
-        };
+        let yyyy = now.getFullYear();
+        let mm = String(now.getMonth() + 1).padStart(2, '0');
+        let dd = String(now.getDate()).padStart(2, '0');
+        
+        document.getElementById("input-date").value = `${yyyy}-${mm}-${dd}`;
+        setupStationCheckboxes();
+        onDateOrStationChange();
     }
 
-    function updateHeaderAndStations() {
-        let info = getTargetDateAndStations();
-        currentDaiList = info.stations;
+    // Tạo các checkbox chọn đài
+    function setupStationCheckboxes() {
+        let container = document.getElementById("station-list-container");
+        container.innerHTML = "";
+        
+        let dateVal = new Date(document.getElementById("input-date").value);
+        let dayOfWeek = dateVal.getDay();
+        let suggestedStations = defaultSchedule[dayOfWeek] || defaultSchedule[1];
 
-        document.getElementById("header-title").innerText = `QUAY THỬ XSKT MIỀN NAM, ${info.dayName}, NGÀY ${info.dateStr}`;
+        allStations.forEach(station => {
+            let lbl = document.createElement("label");
+            let chk = document.createElement("input");
+            chk.type = "checkbox";
+            chk.value = station;
+            chk.checked = suggestedStations.includes(station);
+            chk.onchange = onDateOrStationChange;
 
-        // Hiển thị số cột đài linh hoạt (3 hoặc 4 đài tùy theo ngày)
-        let totalCols = currentDaiList.length;
+            lbl.appendChild(chk);
+            lbl.appendChild(document.createTextNode(" " + station));
+            container.appendChild(lbl);
+        });
+    }
+
+    // Khi thay đổi ngày, tự động gợi ý lịch đài tương ứng
+    document.getElementById("input-date").addEventListener("change", function() {
+        let dateVal = new Date(this.value);
+        let dayOfWeek = dateVal.getDay();
+        let suggestedStations = defaultSchedule[dayOfWeek] || defaultSchedule[1];
+
+        let checkboxes = document.querySelectorAll("#station-list-container input[type='checkbox']");
+        checkboxes.forEach(chk => {
+            chk.checked = suggestedStations.includes(chk.value);
+        });
+        onDateOrStationChange();
+    });
+
+    function onDateOrStationChange() {
+        let checkboxes = document.querySelectorAll("#station-list-container input[type='checkbox']:checked");
+        currentDaiList = Array.from(checkboxes).map(chk => chk.value);
+
+        if (currentDaiList.length === 0) {
+            currentDaiList = ["BẾN TRE", "VŨNG TÀU", "BẠC LIÊU"]; // Mặc định nếu bỏ trống
+        }
+
+        // Cập nhật tiêu đề ngày tháng
+        let dateInputVal = document.getElementById("input-date").value;
+        if (dateInputVal) {
+            let parts = dateInputVal.split("-");
+            let dateObj = new Date(parts[0], parts[1] - 1, parts[2]);
+            let daysText = ["CHỦ NHẬT", "THỨ HAI", "THỨ BA", "THỨ TƯ", "THỨ NĂM", "THỨ SÁU", "THỨ BẢY"];
+            let dayName = daysText[dateObj.getDay()];
+            let dateStr = `${parts[2]}/${parts[1]}/${parts[0]}`;
+
+            document.getElementById("header-title").innerText = `QUAY THỬ XSKT MIỀN NAM, ${dayName}, NGÀY ${dateStr}`;
+        }
+
+        // Hiển thị các cột đài trên bảng
         for (let i = 0; i < 4; i++) {
             let thElem = document.getElementById(`dai-${i}`);
             if (thElem) {
-                if (i < totalCols) {
+                if (i < currentDaiList.length) {
                     thElem.innerText = currentDaiList[i];
                     thElem.style.display = "";
                 } else {
@@ -210,6 +316,7 @@
                 }
             }
         }
+        initTable();
     }
 
     function initTable() {
@@ -253,8 +360,6 @@
         initTable();
 
         let totalCols = currentDaiList.length;
-
-        // Tạo danh sách các ô cần quay số
         let queue = [];
         prizes.forEach(p => {
             let count = p.count || 1;
@@ -265,11 +370,11 @@
             }
         });
 
-        // Tính toán tốc độ chạy để tổng thời gian quay đúng khoảng 90 giây (1 phút 30 giây)
+        // ĐẶT THỜI GIAN CHUẨN: Tổng thời gian quay đúng 90 giây (1 phút 30 giây)
         let totalCells = queue.length;
         let timePerCellMs = 90000 / totalCells; 
 
-        // Kích hoạt ghi hình màn hình khu vực bảng kết quả
+        // Thử kích hoạt ghi hình tự động (nếu trình duyệt máy tính hỗ trợ)
         try {
             const stream = await navigator.mediaDevices.getDisplayMedia({ 
                 video: { mediaSource: "screen" },
@@ -289,13 +394,14 @@
                 document.body.appendChild(a);
                 a.click();
                 setTimeout(() => { document.body.removeChild(a); window.URL.revokeObjectURL(url); }, 100);
-                statusText.innerText = "Quay xong và đã tự động tải video về máy!";
+                statusText.innerText = "Quay xong và đã tự động tải video về máy thành công!";
             };
 
             mediaRecorder.start();
-            statusText.innerText = "Đang quay số và ghi hình video (Khoảng 1 phút 30 giây)...";
+            statusText.innerText = "Đang chạy quay số chậm (1 phút 30 giây) và ghi hình video...";
         } catch (err) {
-            statusText.innerText = "Đang chạy quay số (Chế độ không quay video do bạn từ chối chia sẻ màn hình).";
+            // Trên điện thoại nếu bị trình duyệt chặn, hướng dẫn người dùng bật quay màn hình hệ thống
+            statusText.innerHTML = "<b>Đang chạy quay số (1 phút 30 giây)...</b><br><i>(Mẹo trên điện thoại: Bạn hãy bật tính năng Quay màn hình có sẵn trên thanh công cụ điện thoại trước khi bấm để lưu video).</i>";
         }
 
         let index = 0;
@@ -306,8 +412,8 @@
                 let cell = document.getElementById(item.id);
                 
                 let counter = 0;
-                let maxCounter = 10;
-                let intervalTime = Math.max(10, (timePerCellMs - 200) / maxCounter);
+                let maxCounter = 12; // Số lần đổi số để hiệu ứng mượt và chậm rãi
+                let intervalTime = Math.max(20, (timePerCellMs - 150) / maxCounter);
 
                 let interval = setInterval(() => {
                     cell.innerText = getRandomNumber(item.digits);
@@ -316,7 +422,7 @@
                         clearInterval(interval);
                         cell.innerText = getRandomNumber(item.digits);
                         index++;
-                        setTimeout(runStep, 50);
+                        setTimeout(runStep, 40);
                     }
                 }, intervalTime);
             } else {
@@ -325,6 +431,9 @@
                     if (mediaRecorder && mediaRecorder.state !== "inactive") {
                         mediaRecorder.stop();
                         mediaRecorder.stream.getTracks().forEach(track => track.stop());
+                    }
+                    if(!mediaRecorder) {
+                        statusText.innerHTML = "<b>Quay số hoàn tất!</b> (Hãy kiểm tra lại video từ tính năng quay màn hình của điện thoại).";
                     }
                     btn.disabled = false;
                 }, 1500);
@@ -335,8 +444,7 @@
     }
 
     window.onload = function() {
-        updateHeaderAndStations();
-        initTable();
+        initDefaultDate();
     };
 </script>
 
