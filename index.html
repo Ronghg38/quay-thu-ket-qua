@@ -1,452 +1,1731 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Quay Thử XSKT Miền Nam</title>
-    <!-- Thư viện hỗ trợ ghi hình video trực tiếp từ trình duyệt -->
-    <script src="https://www.jsdelivr.com/package/npm/recordrtc"></script>
-    <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: Arial, sans-serif;
-        }
-        body {
-            background-color: #f0f0f0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-height: 100vh;
-            padding: 5px;
-        }
-        /* Bảng tùy chỉnh ngày và đài */
-        .config-panel {
-            width: 100%;
-            max-width: 600px;
-            background: #fff;
-            border: 2px solid #ccc;
-            padding: 10px;
-            margin-bottom: 8px;
-            border-radius: 5px;
-            font-size: 13px;
-        }
-        .config-panel label {
-            font-weight: bold;
-            display: block;
-            margin-bottom: 3px;
-            color: #333;
-        }
-        .config-panel input, .config-panel select {
-            width: 100%;
-            padding: 6px;
-            margin-bottom: 8px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            font-size: 13px;
-        }
-        .station-checkboxes {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-bottom: 8px;
-        }
-        .station-checkboxes label {
-            font-weight: normal;
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-            cursor: pointer;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Quay Thử &amp; Tham Khảo Xổ Số 3 Miền (XSMN, XSMT, XSMB)</title>
 
-        .container {
-            width: 100%;
-            max-width: 600px;
-            background: #fff;
-            border: 2px solid #ffcc00;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-        }
-        .header {
-            background-color: #ffcc00;
-            color: #cc0000;
-            text-align: center;
-            padding: 10px;
-            font-size: 15px;
-            font-weight: bold;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            text-align: center;
-        }
-        th, td {
-            border: 1px solid #ddd;
-            padding: 5px 2px;
-            font-size: 13px;
-        }
-        th {
-            background-color: #fff;
-            color: #cc0000;
-            font-size: 13px;
-            text-transform: uppercase;
-        }
-        .prize-label {
-            width: 55px;
-            background-color: #f9f9f9;
-            font-weight: bold;
-            color: #333;
-            font-size: 12px;
-        }
-        .number-cell {
-            font-weight: bold;
-            letter-spacing: 0.5px;
-            height: 28px;
-        }
-        .red-text {
-            color: #cc0000;
-            font-size: 17px;
-            font-weight: bold;
-        }
-        .blue-text {
-            color: #0000cc;
-            font-size: 14px;
-            font-weight: bold;
-        }
-        .black-text {
-            color: #000;
-            font-size: 13px;
-        }
-        .controls {
-            text-align: center;
-            padding: 10px;
-            background: #e9e9e9;
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-            align-items: center;
-        }
-        .controls button {
-            background-color: #cc0000;
-            color: white;
-            border: none;
-            padding: 10px 15px;
-            font-size: 15px;
-            font-weight: bold;
-            cursor: pointer;
-            border-radius: 5px;
-            width: 100%;
-            max-width: 300px;
-        }
-        .controls button:hover {
-            background-color: #990000;
-        }
-        .controls button:disabled {
-            background-color: #cccccc;
-            cursor: not-allowed;
-        }
-        #status-text {
-            font-size: 12px;
-            color: #555;
-            font-style: italic;
-            line-height: 1.4;
-        }
-    </style>
+  <link rel="manifest" href="./manifest.json">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="theme-color" content="#0b4a92">
+  <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/3132/3132693.png">
+  <meta name="description" content="Công cụ quay thử xổ số Miền Nam (XSMN), Miền Trung (XSMT), Miền Bắc (XSMB), ghi video MP4/WebM trực tiếp từ bảng quay thử.">
+
+  <script src="https://cdn.jsdelivr.net/npm/mp4-muxer@5.1.3/build/mp4-muxer.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/fix-webm-duration@1.0.6/fix-webm-duration.js"></script>
+
+  <style>
+    /* ================= GIAO DIỆN 1: APP / MOBILE SÁNG ================= */
+    .app-mode-wrap {
+      --primary: #0b4a92;
+      --primary-dark: #08376e;
+      --accent: #f37021;
+      --danger: #d32f2f;
+      --success: #2e7d32;
+      background: #f4f6f9;
+      color: #111;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+
+    .app-bar {
+      background: var(--primary);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 10px;
+      min-height: 38px;
+      flex-wrap: wrap;
+      gap: 6px;
+      font-size: 14px;
+      font-weight: 600;
+    }
+    .app-bar-left, .app-bar-right { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+    .sound-btn {
+      background: rgba(255, 255, 255, 0.2);
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      padding: 4px 8px;
+      font-size: 11.5px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .sound-btn:hover { background: rgba(255, 255, 255, 0.32); }
+    .sound-btn.rec-active {
+      background: #ff1744;
+      color: #fff;
+    }
+
+    .rec-badge {
+      display: none;
+      align-items: center;
+      gap: 5px;
+      font-size: 11.5px;
+      background: rgba(0, 0, 0, 0.35);
+      padding: 2px 8px;
+      border-radius: 10px;
+      color: #ffeb3b;
+      font-weight: 700;
+    }
+    .rec-badge.recording { display: flex; }
+    .rec-dot {
+      width: 7px;
+      height: 7px;
+      background: #ff1744;
+      border-radius: 50%;
+      animation: blink 1s infinite;
+    }
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.2; }
+    }
+
+    .region-tabs {
+      display: flex;
+      background: var(--primary-dark);
+      padding: 4px 8px;
+      gap: 6px;
+    }
+    .region-tab {
+      flex: 1;
+      background: rgba(255, 255, 255, 0.15);
+      color: #e0e0e0;
+      border: none;
+      border-radius: 4px;
+      padding: 6px 8px;
+      font-size: 12.5px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .region-tab.active { background: #ffeb3b; color: #b71c1c; }
+
+    .control-bar {
+      background: #ebebeb;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 8px;
+      border-bottom: 1px solid #dcdcdc;
+      flex-wrap: wrap;
+    }
+    .station-select {
+      background: #fff;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      padding: 5px 8px;
+      font-size: 13px;
+      font-weight: 600;
+      flex: 1;
+      min-width: 150px;
+      color: var(--primary);
+      outline: none;
+    }
+    .btn-group { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+    .btn-spin {
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      padding: 6px 12px;
+      font-size: 12.5px;
+      font-weight: 700;
+      cursor: pointer;
+      min-width: 96px;
+    }
+    .btn-spin.spinning { background: #d9430f; }
+    .btn-rec {
+      background: #b71c1c;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      padding: 6px 10px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .btn-rec.recording {
+      background: #ff1744;
+      box-shadow: 0 0 0 2px rgba(255, 23, 68, 0.35);
+    }
+    .btn-download {
+      display: inline-flex;
+      align-items: center;
+      background: var(--success);
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      padding: 6px 10px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .title-area {
+      background: #fff;
+      text-align: center;
+      padding: 8px 10px;
+      border-bottom: 1px solid #ddd;
+    }
+    .title-area h1 {
+      color: var(--danger);
+      font-size: 15px;
+      font-weight: 800;
+      line-height: 1.3;
+      text-transform: uppercase;
+    }
+    .title-area p { color: #666; font-size: 11.5px; margin-top: 2px; }
+
+    .table-wrapper {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      background: #fff;
+      overflow-x: auto;
+      margin: 8px;
+      border: 1px solid #dcdcdc;
+      border-radius: 6px;
+    }
+    .table-header {
+      display: flex;
+      background: #f5f5f5;
+      border-bottom: 1px solid #ccc;
+      min-height: 32px;
+      font-weight: 700;
+      font-size: 13px;
+      color: #111;
+    }
+    .col-giai {
+      width: 92px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-right: 1px solid #e0e0e0;
+      font-size: 12.5px;
+      font-weight: 700;
+      color: #333;
+      background: #fafafa;
+      flex-shrink: 0;
+      padding: 4px;
+    }
+    .col-station {
+      flex: 1;
+      min-width: 110px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-right: 1px solid #e0e0e0;
+      text-align: center;
+      padding: 4px 6px;
+    }
+    .col-station:last-child { border-right: none; }
+
+    .table-body { display: flex; flex-direction: column; }
+    .prize-row {
+      display: flex;
+      border-bottom: 1px solid #e0e0e0;
+      width: 100%;
+      min-height: 36px;
+    }
+    .prize-row:last-child { border-bottom: none; }
+
+    .row-g8 { flex: 1.1; } .row-g7 { flex: 1; } .row-g6 { flex: 2.2; } .row-g5 { flex: 1; }
+    .row-g4 { flex: 3.4; } .row-g3 { flex: 1.8; } .row-g2 { flex: 1; } .row-g1 { flex: 1; } .row-db { flex: 1.3; }
+
+    .station-nums {
+      flex: 1;
+      min-width: 110px;
+      display: flex;
+      flex-direction: column;
+      border-right: 1px solid #e0e0e0;
+      justify-content: space-evenly;
+      padding: 4px;
+    }
+    .station-nums:last-child { border-right: none; }
+    .num-line {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      flex-wrap: wrap;
+    }
+    .num-cell {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: clamp(14px, 2.2vw, 18px);
+      font-weight: 700;
+      color: #111;
+      letter-spacing: 0.5px;
+      padding: 1px 4px;
+    }
+    .row-g8 .num-cell, .row-db .num-cell, .row-db .col-giai {
+      color: var(--danger);
+      font-weight: 800;
+    }
+    .num-cell.active-spin {
+      background: #fff176;
+      color: #d9430f;
+      border-radius: 3px;
+    }
+
+    .mb-grid-container { flex: 1; display: flex; flex-direction: column; }
+    .mb-sub-row {
+      flex: 1;
+      display: flex;
+      width: 100%;
+      border-bottom: 1px dashed #eee;
+      align-items: center;
+      justify-content: space-evenly;
+      padding: 2px 0;
+    }
+    .mb-sub-row:last-child { border-bottom: none; }
+    .mb-row-db .num-cell { font-size: clamp(18px, 2.6vw, 24px); color: var(--danger); font-weight: 900; }
+    .mb-row-g7 .num-cell { color: var(--danger); font-size: clamp(16px, 2.3vw, 20px); font-weight: 800; }
+
+    .footer-bar {
+      background: #f9f9f9;
+      border-top: 1px solid #ccc;
+      min-height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      padding: 4px 10px;
+      font-size: 12.5px;
+      font-weight: 600;
+      color: #222;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .radio-label { display: flex; align-items: center; gap: 5px; cursor: pointer; }
+    .radio-label input { accent-color: var(--primary); width: 14px; height: 14px; }
+
+    /* ================= GIAO DIỆN 2: VIP TỐI ================= */
+    .vip-mode-wrap {
+      --bg-dark: #0b0f19;
+      --card-bg: #151c2c;
+      --card-border: #26334d;
+      --gold: #fbbf24;
+      --gold-light: #fde68a;
+      --red-vip: #e11d48;
+      --red-dark: #9f1239;
+      --text-main: #f8fafc;
+      --text-sub: #94a3b8;
+      background-color: var(--bg-dark);
+      background-image: radial-gradient(circle at 50% 0%, #2a1225 0%, #0b0f19 60%);
+      color: var(--text-main);
+      min-height: 100vh;
+      padding-bottom: 48px;
+      font-family: "Segoe UI", Roboto, sans-serif;
+    }
+
+    .hero-header {
+      text-align: center;
+      padding: 24px 15px 18px;
+      border-bottom: 1px solid rgba(251, 191, 36, 0.25);
+      background: linear-gradient(180deg, rgba(225, 29, 72, 0.18) 0%, rgba(11, 15, 25, 0) 100%);
+    }
+    .badge-top {
+      display: inline-block;
+      background: linear-gradient(90deg, var(--red-vip), #be123c);
+      color: #fff;
+      padding: 4px 14px;
+      border-radius: 99px;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      margin-bottom: 10px;
+      box-shadow: 0 0 15px rgba(225, 29, 72, 0.6);
+    }
+    .hero-header h1 {
+      font-size: clamp(20px, 4vw, 30px);
+      font-weight: 900;
+      text-transform: uppercase;
+      background: linear-gradient(90deg, #fff, var(--gold), #fff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .hero-header p { color: var(--text-sub); font-size: 13.5px; margin-top: 6px; }
+
+    .main-wrap { max-width: 1140px; margin: 20px auto; padding: 0 15px; }
+
+    .region-nav {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+    .region-btn {
+      background: var(--card-bg);
+      border: 2px solid var(--card-border);
+      color: var(--text-sub);
+      padding: 11px 10px;
+      border-radius: 12px;
+      cursor: pointer;
+      font-weight: 900;
+      font-size: 14px;
+      text-transform: uppercase;
+      text-align: center;
+      transition: 0.25s;
+    }
+    .region-btn:hover { border-color: var(--gold); color: #fff; }
+    .region-btn.active {
+      background: linear-gradient(135deg, var(--gold), #d97706);
+      border-color: #fef08a;
+      color: #000;
+      box-shadow: 0 6px 20px rgba(251, 191, 36, 0.4);
+    }
+
+    .day-nav {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 8px;
+      margin-bottom: 22px;
+    }
+    @media (max-width: 768px) {
+      .region-nav { grid-template-columns: 1fr; gap: 8px; }
+      .day-nav { grid-template-columns: repeat(4, 1fr); }
+    }
+    .day-btn {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      color: var(--text-sub);
+      padding: 9px 6px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 12.5px;
+      text-align: center;
+      transition: 0.25s;
+    }
+    .day-btn span { display: block; font-size: 11px; font-weight: normal; margin-top: 3px; opacity: 0.75; }
+    .day-btn:hover { border-color: var(--gold); color: #fff; }
+    .day-btn.active {
+      background: linear-gradient(135deg, var(--red-vip), var(--red-dark));
+      border-color: var(--gold);
+      color: #fff;
+      box-shadow: 0 6px 18px rgba(225, 29, 72, 0.4);
+    }
+    .day-btn.active span { color: var(--gold-light); opacity: 1; }
+
+    .sec-head {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+    .sec-title {
+      font-size: 17px;
+      font-weight: 800;
+      color: var(--gold);
+    }
+
+    .ref-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+    .vip-card {
+      background: linear-gradient(155deg, #1b2438 0%, #111726 100%);
+      border: 1px solid rgba(251, 191, 36, 0.35);
+      border-radius: 16px;
+      padding: 16px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35);
+    }
+    .vip-card-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px dashed rgba(255, 255, 255, 0.12);
+      padding-bottom: 10px;
+      margin-bottom: 12px;
+    }
+    .station-name { font-size: 17px; font-weight: 900; color: #fff; }
+    .tag-vip {
+      background: rgba(251, 191, 36, 0.15);
+      color: var(--gold);
+      border: 1px solid var(--gold);
+      padding: 2px 8px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 800;
+    }
+    .balls-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      font-size: 13.5px;
+      color: var(--text-sub);
+    }
+    .ball-vip {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 30%, #ff4d6d, #be123c);
+      color: #fff;
+      font-size: 18px;
+      font-weight: 900;
+      box-shadow: 0 4px 12px rgba(225, 29, 72, 0.6), inset 0 2px 4px rgba(255, 255, 255, 0.4);
+      border: 2px solid var(--gold);
+    }
+    .pill-gold {
+      background: linear-gradient(135deg, #f59e0b, #d97706);
+      color: #000;
+      font-weight: 900;
+      font-size: 14px;
+      padding: 4px 10px;
+      border-radius: 8px;
+      letter-spacing: 0.5px;
+    }
+    .pill-sub {
+      background: rgba(255, 255, 255, 0.06);
+      color: #38bdf8;
+      font-weight: 800;
+      font-size: 14px;
+      padding: 4px 10px;
+      border-radius: 6px;
+      border: 1px solid rgba(56, 189, 248, 0.3);
+    }
+
+    .spin-panel {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.45);
+      margin-bottom: 28px;
+    }
+    .spin-toolbar {
+      background: linear-gradient(90deg, #1e293b, #0f172a);
+      padding: 14px 18px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      border-bottom: 1px solid var(--card-border);
+    }
+    .btn-action {
+      background: linear-gradient(135deg, var(--gold), #f59e0b);
+      color: #000;
+      border: none;
+      padding: 10px 22px;
+      border-radius: 10px;
+      font-weight: 900;
+      font-size: 14px;
+      cursor: pointer;
+      text-transform: uppercase;
+      box-shadow: 0 0 20px rgba(251, 191, 36, 0.45);
+      transition: 0.2s;
+    }
+    .btn-action:hover { transform: translateY(-1px); }
+    .btn-action:disabled { opacity: 0.5; cursor: not-allowed; }
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.07);
+      color: var(--gold);
+      border: 1px solid var(--gold);
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 12.5px;
+      cursor: pointer;
+    }
+    .btn-secondary:hover { background: var(--gold); color: #000; }
+
+    .table-scroll { overflow-x: auto; }
+    table.xsmn-board { width: 100%; border-collapse: collapse; text-align: center; }
+    table.xsmn-board th {
+      background: #0f172a;
+      color: var(--gold);
+      padding: 12px 10px;
+      font-size: 15px;
+      font-weight: 900;
+      border: 1px solid var(--card-border);
+      text-transform: uppercase;
+    }
+    table.xsmn-board td {
+      border: 1px solid var(--card-border);
+      padding: 9px 8px;
+    }
+    .col-prize {
+      width: 82px;
+      background: #0b0f19;
+      color: var(--text-sub);
+      font-weight: 800;
+      font-size: 12.5px;
+    }
+    .num-group {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 6px 14px;
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: 0.8px;
+    }
+    .num-g8, .num-db {
+      color: #fb7185;
+      font-size: 22px;
+      font-weight: 900;
+    }
+    .rolling { color: var(--gold) !important; opacity: 0.85; }
+
+    .loto-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 16px;
+    }
+    .loto-box {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    .loto-box-head {
+      background: #1e293b;
+      color: var(--gold);
+      padding: 10px;
+      font-weight: 800;
+      text-align: center;
+      font-size: 14.5px;
+    }
+    table.loto-tb { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+    table.loto-tb td { border-top: 1px solid var(--card-border); padding: 6px 12px; }
+    .td-dau {
+      width: 65px;
+      font-weight: 800;
+      color: var(--gold);
+      background: rgba(0, 0, 0, 0.25);
+      text-align: center;
+    }
+    .td-duoi { font-weight: 700; color: #e2e8f0; letter-spacing: 0.5px; }
+
+    /* ================= MODAL LƯU & VIDEO ================= */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.65);
+      z-index: 999;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+    .modal-overlay.show { display: flex; }
+    .modal-box {
+      background: #fff;
+      color: #111;
+      border-radius: 12px;
+      padding: 18px 16px;
+      width: 100%;
+      max-width: 420px;
+      text-align: center;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+    .modal-box h3 { color: #0b4a92; font-size: 16px; margin-bottom: 6px; }
+    .modal-box p { color: #444; font-size: 13px; margin-bottom: 12px; line-height: 1.4; }
+    .modal-actions { display: flex; flex-direction: column; gap: 8px; }
+    .btn-save-main {
+      background: #1877f2;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      padding: 10px;
+      font-size: 13.5px;
+      font-weight: 700;
+      cursor: pointer;
+      width: 100%;
+    }
+    .btn-save-dl {
+      background: #2e7d32;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      padding: 10px;
+      font-size: 13.5px;
+      font-weight: 700;
+      cursor: pointer;
+      width: 100%;
+    }
+    .btn-save-vid {
+      background: #d81b60;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      padding: 10px;
+      font-size: 13.5px;
+      font-weight: 700;
+      cursor: pointer;
+      width: 100%;
+    }
+    .btn-close-modal {
+      background: #e0e0e0;
+      color: #333;
+      border: none;
+      border-radius: 6px;
+      padding: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      width: 100%;
+    }
+    #videoPreviewEl {
+      width: 100%;
+      max-height: 240px;
+      border-radius: 8px;
+      background: #000;
+      margin-bottom: 10px;
+      display: none;
+    }
+  </style>
 </head>
 <body>
-
-    <!-- Bảng tùy chỉnh ngày tháng và chọn đài -->
-    <div class="config-panel">
-        <label for="input-date">Chọn Ngày Quay Thử:</label>
-        <input type="date" id="input-date" onchange="onDateOrStationChange()">
-
-        <label>Chọn Đài Miền Nam (Tối đa 4 đài):</label>
-        <div class="station-checkboxes" id="station-list-container">
-            <!-- Được tạo tự động bằng JS -->
+  <!-- GIAO DIỆN 1: APP SÁNG -->
+  <div id="appView" class="app-mode-wrap">
+    <div class="app-bar">
+      <div class="app-bar-left">
+        <span>&#8592; Quay thử 3 Miền</span>
+      </div>
+      <div class="app-bar-right">
+        <div id="recBadge" class="rec-badge">
+          <span class="rec-dot"></span>
+          <span id="recTimerText">00:00</span>
         </div>
+        <button id="muteBtn" class="sound-btn" onclick="toggleMute()">🔊 Bật tiếng</button>
+        <button id="mp3Btn" class="sound-btn" onclick="document.getElementById('mp3Input').click()">🎵 Đổi nhạc MP3</button>
+        <button class="sound-btn" onclick="switchThemeMode('vip')">✨ Giao diện VIP</button>
+        <input type="file" id="mp3Input" accept="audio/*" style="display:none" onchange="loadCustomMp3(event)">
+      </div>
     </div>
 
-<div class="container" id="capture-area">
-    <div class="header" id="header-title">
-        QUAY THỬ XSKT MIỀN NAM
+    <div class="region-tabs">
+      <button class="region-tab active" data-region="MN" onclick="selectRegion('MN')">Miền Nam (XSMN)</button>
+      <button class="region-tab" data-region="MT" onclick="selectRegion('MT')">Miền Trung (XSMT)</button>
+      <button class="region-tab" data-region="MB" onclick="selectRegion('MB')">Miền Bắc (XSMB)</button>
     </div>
 
-    <table>
-        <thead>
-            <tr>
-                <th style="width: 55px;" id="col-label"></th>
-                <th id="dai-0">ĐÀI 1</th>
-                <th id="dai-1">ĐÀI 2</th>
-                <th id="dai-2" style="display:none;">ĐÀI 3</th>
-                <th id="dai-3" style="display:none;">ĐÀI 4</th>
-            </tr>
-        </thead>
-        <tbody id="lottery-body">
-        </tbody>
-    </table>
-
-    <div class="controls">
-        <button id="start-btn" onclick="startQuayThu()">BẮT ĐẦU QUAY THỬ (1 PHÚT 30 GIÂY)</button>
-        <span id="status-text">Hệ thống sẵn sàng. Nhấn nút để bắt đầu quay số chậm rãi.</span>
+    <div class="control-bar">
+      <select id="stationSelect" class="station-select" onchange="onStationSelectChange()">
+        <option value="ALL">Tất cả các đài mở thưởng</option>
+      </select>
+      <div class="btn-group">
+        <button id="spinBtn" class="btn-spin" onclick="startSpin()">▶ Quay thử</button>
+        <button id="recToggleBtn" class="btn-rec" onclick="toggleManualRecording()">⏺ Ghi video</button>
+        <button class="btn-download" onclick="openSaveModal()">💾 Lưu / Video</button>
+      </div>
     </div>
-</div>
 
-<script>
-    // Danh sách toàn bộ các đài miền Nam trong tuần
-    const allStations = [
-        "TP. HỒ CHÍ MINH", "ĐỒNG THÁP", "CÀ MAU", 
-        "BẾN TRE", "VŨNG TÀU", "BẠC LIÊU", 
-        "ĐỒNG NAI", "CẦN THƠ", "SÓC TRĂNG", 
-        "TÂY NINH", "AN GIANG", "BÌNH THUẬN", 
-        "VĨNH LONG", "BÌNH DƯƠNG", "TRÀ VINH", 
-        "LONG AN", "BÌNH PHƯỚC", "HẬU GIANG", 
-        "ĐÀ LAT", "KIÊN GIANG", "TIỀN GIANG"
-    ];
+    <div class="title-area">
+      <h1 id="appTitle">QUAY THỬ XỔ SỐ MIỀN NAM (XSMN)</h1>
+      <p id="appSubtitle">Kết quả tham khảo ngẫu nhiên phục vụ giải trí</p>
+    </div>
 
-    // Lịch mặc định theo thứ trong tuần (0: Chủ Nhật -> 6: Thứ Bảy)
-    const defaultSchedule = {
-        0: ["TIỀN GIANG", "KIÊN GIANG", "ĐÀ LAT"],
-        1: ["TP. HỒ CHÍ MINH", "ĐỒNG THÁP", "CÀ MAU"],
-        2: ["BẾN TRE", "VŨNG TÀU", "BẠC LIÊU"],
-        3: ["ĐỒNG NAI", "CẦN THƠ", "SÓC TRĂNG"],
-        4: ["TÂY NINH", "AN GIANG", "BÌNH THUẬN"],
-        5: ["VĨNH LONG", "BÌNH DƯƠNG", "TRÀ VINH"],
-        6: ["TP. HỒ CHÍ MINH", "LONG AN", "BÌNH PHƯỚC", "HẬU GIANG"]
+    <div class="table-wrapper">
+      <div id="appTableHeader" class="table-header"></div>
+      <div id="appTableBody" class="table-body"></div>
+    </div>
+
+    <div class="footer-bar">
+      <label class="radio-label">
+        <input type="radio" name="appFilterMode" value="all" checked onchange="renderAppBoard()">
+        <span>Hiển thị đủ số</span>
+      </label>
+      <label class="radio-label">
+        <input type="radio" name="appFilterMode" value="last2" onchange="renderAppBoard()">
+        <span>Chỉ xem 2 số cuối</span>
+      </label>
+      <label class="radio-label">
+        <input type="checkbox" id="autoRecCheckbox" checked>
+        <span>Tự ghi khi quay</span>
+      </label>
+      <span id="mp3StatusText" style="color:#0b4a92;">Nhạc nền: Mặc định</span>
+    </div>
+  </div>
+
+  <!-- GIAO DIỆN 2: VIP TỐI -->
+  <div id="vipView" class="vip-mode-wrap" style="display:none;">
+    <header class="hero-header">
+      <div class="badge-top">★ CHUYÊN TRANG XỔ SỐ 3 MIỀN VIP ★</div>
+      <h1 id="mainHeading">THAM KHẢO SỐ ĐẸP &amp; QUAY THỬ XSMN</h1>
+      <p id="todayText">Lịch mở thưởng và phân tích nhịp cầu đẹp các đài</p>
+      <div style="margin-top:12px;">
+        <button class="btn-secondary" onclick="switchThemeMode('app')">📱 Chuyển sang giao diện App sáng</button>
+      </div>
+    </header>
+
+    <div class="main-wrap">
+      <div class="region-nav">
+        <button class="region-btn active" data-region="MN" onclick="selectRegion('MN')">Miền Nam (XSMN)</button>
+        <button class="region-btn" data-region="MT" onclick="selectRegion('MT')">Miền Trung (XSMT)</button>
+        <button class="region-btn" data-region="MB" onclick="selectRegion('MB')">Miền Bắc (XSMB)</button>
+      </div>
+
+      <div id="dayNav" class="day-nav"></div>
+
+      <div class="sec-head">
+        <div class="sec-title" id="refSecTitle">🔥 THAM KHẢO SỐ ĐẸP HÔM NAY</div>
+        <button class="btn-secondary" onclick="refreshVipSuggestions()">🔄 Đổi cầu tham khảo</button>
+      </div>
+      <div id="refGrid" class="ref-grid"></div>
+
+      <div class="spin-panel">
+        <div class="spin-toolbar">
+          <div class="sec-title" id="spinSecTitle" style="margin:0;">🎰 BẢNG QUAY THỬ TRỰC TIẾP</div>
+          <div style="display:flex; gap:10px; flex-wrap:wrap;">
+            <button id="vipSpinBtn" class="btn-action" onclick="startSpin()">Quay thử ngay</button>
+            <button id="vipRecBtn" class="btn-secondary" onclick="toggleManualRecording()">⏺ Ghi video</button>
+            <button class="btn-secondary" onclick="openSaveModal()">💾 Lưu bảng</button>
+          </div>
+        </div>
+        <div class="table-scroll">
+          <table class="xsmn-board">
+            <thead id="vipBoardHead"></thead>
+            <tbody id="vipBoardBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="sec-head">
+        <div class="sec-title">📊 BẢNG ĐẦU - ĐUÔI LOTO THAM KHẢO</div>
+      </div>
+      <div id="lotoGrid" class="loto-grid"></div>
+    </div>
+  </div>
+
+  <!-- MODAL LƯU & XUẤT VIDEO -->
+  <div id="saveModal" class="modal-overlay" onclick="if(event.target===this) closeSaveModal()">
+    <div class="modal-box">
+      <h3>Lưu kết quả &amp; Video quay thử</h3>
+      <p id="saveSummaryText">Xuất video thực tế từ Canvas hoặc sao chép/tải file văn bản kết quả.</p>
+      <video id="videoPreviewEl" controls playsinline></video>
+      <div class="modal-actions">
+        <button id="exportVideoBtn" class="btn-save-vid" onclick="exportRecordedVideo()">🎬 Xuất &amp; tải file Video (.MP4 / .WEBM)</button>
+        <button class="btn-save-main" onclick="copyResultText()">📋 Sao chép kết quả</button>
+        <button class="btn-save-dl" onclick="downloadResultTxt()">⬇ Tải file kết quả (.TXT)</button>
+        <button class="btn-close-modal" onclick="closeSaveModal()">Đóng</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- CANVAS ẨN DÙNG ĐỂ RENDER KHUNG HÌNH VIDEO -->
+  <canvas id="recordCanvas" width="720" height="1280" style="display:none;"></canvas>
+  <audio id="customAudio" loop></audio>
+
+  <script>
+    const SCHEDULE = {
+      MN: {
+        name: "Miền Nam (XSMN)",
+        0: ["Tiền Giang", "Kiên Giang", "Đà Lạt"],
+        1: ["TP.HCM", "Đồng Tháp", "Cà Mau"],
+        2: ["Bến Tre", "Vũng Tàu", "Bạc Liêu"],
+        3: ["Đồng Nai", "Cần Thơ", "Sóc Trăng"],
+        4: ["Tây Ninh", "An Giang", "Bình Thuận"],
+        5: ["Vĩnh Long", "Bình Dương", "Trà Vinh"],
+        6: ["TP.HCM", "Long An", "Bình Phước", "Hậu Giang"]
+      },
+      MT: {
+        name: "Miền Trung (XSMT)",
+        0: ["Kon Tum", "Khánh Hòa", "Thừa Thiên Huế"],
+        1: ["Thừa Thiên Huế", "Phú Yên"],
+        2: ["Đắk Lắk", "Quảng Nam"],
+        3: ["Đà Nẵng", "Khánh Hòa"],
+        4: ["Bình Định", "Quảng Trị", "Quảng Bình"],
+        5: ["Gia Lai", "Ninh Thuận"],
+        6: ["Đà Nẵng", "Quảng Ngãi", "Đắk Nông"]
+      },
+      MB: {
+        name: "Miền Bắc (XSMB)",
+        0: ["Thái Bình"],
+        1: ["Quảng Ninh"],
+        2: ["Bắc Ninh"],
+        3: ["Hà Nội"],
+        4: ["Hải Phòng"],
+        5: ["Nam Định"],
+        6: ["Hà Nội"]
+      }
     };
 
-    const prizes = [
-        { name: "8", digits: 2, class: "red-text" },
-        { name: "7", digits: 3, class: "blue-text" },
-        { name: "6", digits: 4, count: 3, class: "black-text" },
-        { name: "5", digits: 4, class: "black-text" },
-        { name: "4", digits: 5, count: 7, class: "black-text" },
-        { name: "3", digits: 5, count: 2, class: "black-text" },
-        { name: "2", digits: 5, class: "black-text" },
-        { name: "1", digits: 5, class: "black-text" },
-        { name: "ĐB", digits: 6, class: "red-text" }
+    const DAY_LABELS = [
+      { day: 0, label: "Chủ Nhật", short: "CN" },
+      { day: 1, label: "Thứ 2", short: "T2" },
+      { day: 2, label: "Thứ 3", short: "T3" },
+      { day: 3, label: "Thứ 4", short: "T4" },
+      { day: 4, label: "Thứ 5", short: "T5" },
+      { day: 5, label: "Thứ 6", short: "T6" },
+      { day: 6, label: "Thứ 7", short: "T7" }
     ];
 
-    let currentDaiList = [];
+    const PRIZE_SPECS_SOUTH = [
+      { key: "g8", label: "Giải 8", rowClass: "row-g8", digits: 2, count: 1 },
+      { key: "g7", label: "Giải 7", rowClass: "row-g7", digits: 3, count: 1 },
+      { key: "g6", label: "Giải 6", rowClass: "row-g6", digits: 4, count: 3 },
+      { key: "g5", label: "Giải 5", rowClass: "row-g5", digits: 4, count: 1 },
+      { key: "g4", label: "Giải 4", rowClass: "row-g4", digits: 5, count: 7 },
+      { key: "g3", label: "Giải 3", rowClass: "row-g3", digits: 5, count: 2 },
+      { key: "g2", label: "Giải 2", rowClass: "row-g2", digits: 5, count: 1 },
+      { key: "g1", label: "Giải 1", rowClass: "row-g1", digits: 5, count: 1 },
+      { key: "db", label: "ĐB", rowClass: "row-db", digits: 6, count: 1 }
+    ];
 
-    // Khởi tạo ngày mặc định (tính theo mốc 16:30 chiều)
-    function initDefaultDate() {
-        let now = new Date();
-        let hours = now.getHours();
-        let minutes = now.getMinutes();
+    const PRIZE_SPECS_MB = [
+      { key: "db", label: "ĐB", rowClass: "mb-row-db", digits: 5, count: 1 },
+      { key: "g1", label: "Giải 1", rowClass: "row-g1", digits: 5, count: 1 },
+      { key: "g2", label: "Giải 2", rowClass: "row-g2", digits: 5, count: 2 },
+      { key: "g3", label: "Giải 3", rowClass: "row-g3", digits: 5, count: 6 },
+      { key: "g4", label: "Giải 4", rowClass: "row-g4", digits: 4, count: 4 },
+      { key: "g5", label: "Giải 5", rowClass: "row-g5", digits: 4, count: 6 },
+      { key: "g6", label: "Giải 6", rowClass: "row-g6", digits: 3, count: 3 },
+      { key: "g7", label: "Giải 7", rowClass: "mb-row-g7", digits: 2, count: 4 }
+    ];
 
-        // Sau 16:30 tự động nhảy sang ngày hôm sau
-        if (hours > 16 || (hours === 16 && minutes >= 30)) {
-            now.setDate(now.getDate() + 1);
-        }
+    let currentRegion = "MN";
+    let currentDay = new Date().getDay();
+    let selectedStation = "ALL";
+    let isSpinning = false;
+    let isRollingNow = false;
+    let isMuted = true;
+    let customMp3Url = null;
+    let recInterval = null;
+    let recSeconds = 0;
+    let currentResults = {};
+    let vipSuggestions = [];
 
-        let yyyy = now.getFullYear();
-        let mm = String(now.getMonth() + 1).padStart(2, '0');
-        let dd = String(now.getDate()).padStart(2, '0');
-        
-        document.getElementById("input-date").value = `${yyyy}-${mm}-${dd}`;
-        setupStationCheckboxes();
-        onDateOrStationChange();
+    // Trạng thái ghi hình Canvas + MediaRecorder / mp4-muxer
+    let isRecordingVideo = false;
+    let recorderEngine = null; // "mp4-muxer" | "mediarecorder"
+    let mediaRecorder = null;
+    let recordedChunks = [];
+    let mp4Muxer = null;
+    let videoEncoder = null;
+    let canvasFrameTimer = null;
+    let videoFrameCounter = 0;
+    let lastRecordedVideoBlob = null;
+    let lastRecordedVideoExt = "webm";
+
+    function padNum(num, digits) {
+      return String(Math.floor(num)).padStart(digits, "0");
     }
 
-    // Tạo các checkbox chọn đài
-    function setupStationCheckboxes() {
-        let container = document.getElementById("station-list-container");
-        container.innerHTML = "";
-        
-        let dateVal = new Date(document.getElementById("input-date").value);
-        let dayOfWeek = dateVal.getDay();
-        let suggestedStations = defaultSchedule[dayOfWeek] || defaultSchedule[1];
+    function randomDigits(digits) {
+      const max = Math.pow(10, digits);
+      return padNum(Math.floor(Math.random() * max), digits);
+    }
 
-        allStations.forEach(station => {
-            let lbl = document.createElement("label");
-            let chk = document.createElement("input");
-            chk.type = "checkbox";
-            chk.value = station;
-            chk.checked = suggestedStations.includes(station);
-            chk.onchange = onDateOrStationChange;
+    function getActiveStations() {
+      const list = SCHEDULE[currentRegion][currentDay] || [];
+      if (currentRegion === "MB" || selectedStation === "ALL") return list;
+      return list.includes(selectedStation) ? [selectedStation] : list;
+    }
 
-            lbl.appendChild(chk);
-            lbl.appendChild(document.createTextNode(" " + station));
-            container.appendChild(lbl);
+    function generateInitialResults() {
+      const stations = SCHEDULE[currentRegion][currentDay] || [];
+      const specs = currentRegion === "MB" ? PRIZE_SPECS_MB : PRIZE_SPECS_SOUTH;
+      const data = {};
+      stations.forEach((st) => {
+        data[st] = {};
+        specs.forEach((sp) => {
+          data[st][sp.key] = Array.from({ length: sp.count }, () => randomDigits(sp.digits));
         });
+      });
+      currentResults = data;
+      drawBoardToCanvas();
     }
 
-    // Khi thay đổi ngày, tự động gợi ý lịch đài tương ứng
-    document.getElementById("input-date").addEventListener("change", function() {
-        let dateVal = new Date(this.value);
-        let dayOfWeek = dateVal.getDay();
-        let suggestedStations = defaultSchedule[dayOfWeek] || defaultSchedule[1];
+    function generateVipSuggestions() {
+      const stations = SCHEDULE[currentRegion][currentDay] || [];
+      vipSuggestions = stations.map((st) => ({
+        station: st,
+        bachThu: padNum(Math.floor(Math.random() * 100), 2),
+        songThu: [padNum(Math.floor(Math.random() * 100), 2), padNum(Math.floor(Math.random() * 100), 2)],
+        danDe: Array.from({ length: 4 }, () => padNum(Math.floor(Math.random() * 100), 2)).join(" - ")
+      }));
+    }
 
-        let checkboxes = document.querySelectorAll("#station-list-container input[type='checkbox']");
-        checkboxes.forEach(chk => {
-            chk.checked = suggestedStations.includes(chk.value);
+    function switchThemeMode(mode) {
+      const appView = document.getElementById("appView");
+      const vipView = document.getElementById("vipView");
+      if (mode === "vip") {
+        appView.style.display = "none";
+        vipView.style.display = "block";
+      } else {
+        vipView.style.display = "none";
+        appView.style.display = "flex";
+      }
+      renderAll();
+    }
+
+    function selectRegion(region) {
+      currentRegion = region;
+      selectedStation = "ALL";
+      document.querySelectorAll(".region-tab").forEach((btn) => {
+        btn.classList.toggle("active", btn.dataset.region === region);
+      });
+      document.querySelectorAll(".region-btn").forEach((btn) => {
+        btn.classList.toggle("active", btn.dataset.region === region);
+      });
+      generateInitialResults();
+      generateVipSuggestions();
+      renderAll();
+    }
+
+    function selectDay(day) {
+      currentDay = day;
+      selectedStation = "ALL";
+      generateInitialResults();
+      generateVipSuggestions();
+      renderAll();
+    }
+
+    function onStationSelectChange() {
+      selectedStation = document.getElementById("stationSelect").value;
+      renderAppBoard();
+    }
+
+    function refreshVipSuggestions() {
+      generateVipSuggestions();
+      renderVipSuggestions();
+    }
+
+    function toggleMute() {
+      isMuted = !isMuted;
+      const btn = document.getElementById("muteBtn");
+      const audio = document.getElementById("customAudio");
+      btn.textContent = isMuted ? "🔊 Bật tiếng" : "🔇 Tắt tiếng";
+      if (!isMuted && customMp3Url) {
+        audio.play().catch(() => {});
+      } else {
+        audio.pause();
+      }
+    }
+
+    function loadCustomMp3(event) {
+      const file = event.target.files && event.target.files[0];
+      if (!file) return;
+      if (customMp3Url) URL.revokeObjectURL(customMp3Url);
+      customMp3Url = URL.createObjectURL(file);
+      const audio = document.getElementById("customAudio");
+      audio.src = customMp3Url;
+      document.getElementById("mp3StatusText").textContent = "Nhạc nền: " + file.name;
+      if (!isMuted) {
+        audio.play().catch(() => {});
+      }
+    }
+
+    function playTickSound() {
+      if (isMuted) return;
+      try {
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        if (!AudioCtx) return;
+        const ctx = new AudioCtx();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = "triangle";
+        osc.frequency.value = 620;
+        gain.gain.value = 0.04;
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start();
+        osc.stop(ctx.currentTime + 0.035);
+      } catch (_) {}
+    }
+
+    /* ================= VẼ BẢNG QUAY THỬ LÊN CANVAS ================= */
+    function drawBoardToCanvas() {
+      const canvas = document.getElementById("recordCanvas");
+      if (!canvas) return;
+      const ctx = canvas.getContext("2d");
+      const W = canvas.width;
+      const H = canvas.height;
+
+      // Nền xanh đậm sang trọng
+      const grad = ctx.createLinearGradient(0, 0, 0, H);
+      grad.addColorStop(0, "#08376e");
+      grad.addColorStop(0.16, "#0b4a92");
+      grad.addColorStop(0.16, "#f4f6f9");
+      grad.addColorStop(1, "#f4f6f9");
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, W, H);
+
+      const dayObj = DAY_LABELS.find((d) => d.day === currentDay) || DAY_LABELS[0];
+      const regionInfo = SCHEDULE[currentRegion];
+      const stations = getActiveStations();
+      const specs = currentRegion === "MB" ? PRIZE_SPECS_MB : PRIZE_SPECS_SOUTH;
+
+      // Tiêu đề header video
+      ctx.fillStyle = "#ffeb3b";
+      ctx.font = "bold 28px Arial, sans-serif";
+      ctx.textAlign = "center";
+      ctx.fillText(`QUAY THỬ ${regionInfo.name.toUpperCase()}`, W / 2, 62);
+
+      ctx.fillStyle = "#ffffff";
+      ctx.font = "600 20px Arial, sans-serif";
+      ctx.fillText(`${dayObj.label} • ${stations.join(" - ")}`, W / 2, 102);
+
+      // Nhãn trạng thái quay / ghi
+      ctx.fillStyle = isRollingNow ? "#ff5252" : "#69f0ae";
+      ctx.font = "bold 18px Arial, sans-serif";
+      ctx.fillText(isRollingNow ? "● ĐANG QUAY SỐ..." : "✓ KẾT QUẢ QUAY THỬ", W / 2, 140);
+
+      // Khung bảng giải
+      const boardX = 24;
+      const boardY = 225;
+      const boardW = W - 48;
+      const boardH = H - boardY - 70;
+      const prizeColW = 110;
+      const stationColW = (boardW - prizeColW) / Math.max(1, stations.length);
+
+      ctx.fillStyle = "#ffffff";
+      ctx.fillRect(boardX, boardY, boardW, boardH);
+      ctx.strokeStyle = "#cbd5e1";
+      ctx.lineWidth = 2;
+      ctx.strokeRect(boardX, boardY, boardW, boardH);
+
+      // Header cột giải & các đài
+      const headerH = 52;
+      ctx.fillStyle = "#e2e8f0";
+      ctx.fillRect(boardX, boardY, boardW, headerH);
+
+      ctx.fillStyle = "#0f172a";
+      ctx.font = "bold 20px Arial, sans-serif";
+      ctx.textAlign = "center";
+      ctx.fillText("Giải", boardX + prizeColW / 2, boardY + 33);
+
+      stations.forEach((st, idx) => {
+        const cx = boardX + prizeColW + idx * stationColW + stationColW / 2;
+        ctx.fillStyle = "#0b4a92";
+        ctx.font = "bold 19px Arial, sans-serif";
+        ctx.fillText(st, cx, boardY + 33);
+      });
+
+      // Các hàng giải thưởng
+      const bodyTop = boardY + headerH;
+      const rowH = (boardH - headerH) / specs.length;
+
+      specs.forEach((sp, rIdx) => {
+        const ry = bodyTop + rIdx * rowH;
+
+        // Kẻ ngang
+        ctx.strokeStyle = "#e2e8f0";
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.moveTo(boardX, ry);
+        ctx.lineTo(boardX + boardW, ry);
+        ctx.stroke();
+
+        // Ô tên giải
+        ctx.fillStyle = (sp.key === "db" || sp.key === "g8") ? "#fef2f2" : "#f8fafc";
+        ctx.fillRect(boardX + 1, ry + 1, prizeColW - 2, rowH - 2);
+
+        ctx.fillStyle = (sp.key === "db" || sp.key === "g8") ? "#d32f2f" : "#334155";
+        ctx.font = "bold 18px Arial, sans-serif";
+        ctx.fillText(sp.label, boardX + prizeColW / 2, ry + rowH / 2 + 6);
+
+        // Số từng đài
+        stations.forEach((st, cIdx) => {
+          const colX = boardX + prizeColW + cIdx * stationColW;
+          ctx.strokeStyle = "#e2e8f0";
+          ctx.beginPath();
+          ctx.moveTo(colX, boardY);
+          ctx.lineTo(colX, boardY + boardH);
+          ctx.stroke();
+
+          const rawNums = currentResults[st]?.[sp.key] || [];
+          const displayNums = rawNums.map((n) => formatDisplayNumber(n, sp.digits));
+          const isHighlight = sp.key === "db" || sp.key === "g8";
+
+          ctx.fillStyle = isRollingNow ? "#d97706" : (isHighlight ? "#d32f2f" : "#111827");
+          ctx.font = isHighlight ? "bold 24px Arial, sans-serif" : "bold 20px Arial, sans-serif";
+
+          const textJoined = displayNums.join("  ");
+          ctx.fillText(textJoined, colX + stationColW / 2, ry + rowH / 2 + 7);
         });
-        onDateOrStationChange();
-    });
+      });
 
-    function onDateOrStationChange() {
-        let checkboxes = document.querySelectorAll("#station-list-container input[type='checkbox']:checked");
-        currentDaiList = Array.from(checkboxes).map(chk => chk.value);
-
-        if (currentDaiList.length === 0) {
-            currentDaiList = ["BẾN TRE", "VŨNG TÀU", "BẠC LIÊU"]; // Mặc định nếu bỏ trống
-        }
-
-        // Cập nhật tiêu đề ngày tháng
-        let dateInputVal = document.getElementById("input-date").value;
-        if (dateInputVal) {
-            let parts = dateInputVal.split("-");
-            let dateObj = new Date(parts[0], parts[1] - 1, parts[2]);
-            let daysText = ["CHỦ NHẬT", "THỨ HAI", "THỨ BA", "THỨ TƯ", "THỨ NĂM", "THỨ SÁU", "THỨ BẢY"];
-            let dayName = daysText[dateObj.getDay()];
-            let dateStr = `${parts[2]}/${parts[1]}/${parts[0]}`;
-
-            document.getElementById("header-title").innerText = `QUAY THỬ XSKT MIỀN NAM, ${dayName}, NGÀY ${dateStr}`;
-        }
-
-        // Hiển thị các cột đài trên bảng
-        for (let i = 0; i < 4; i++) {
-            let thElem = document.getElementById(`dai-${i}`);
-            if (thElem) {
-                if (i < currentDaiList.length) {
-                    thElem.innerText = currentDaiList[i];
-                    thElem.style.display = "";
-                } else {
-                    thElem.style.display = "none";
-                }
-            }
-        }
-        initTable();
+      // Footer video
+      ctx.fillStyle = "#475569";
+      ctx.font = "16px Arial, sans-serif";
+      ctx.fillText("Video quay thử tự động • Tham khảo giải trí", W / 2, H - 28);
     }
 
-    function initTable() {
-        let totalCols = currentDaiList.length;
-        const tbody = document.getElementById("lottery-body");
-        tbody.innerHTML = "";
-        
-        prizes.forEach(p => {
-            let count = p.count || 1;
-            for (let i = 0; i < count; i++) {
-                let row = document.createElement("tr");
-                let labelCell = document.createElement("td");
-                labelCell.className = "prize-label";
-                if (i === 0) labelCell.innerText = `Giải ${p.name}`;
-                row.appendChild(labelCell);
-
-                for (let col = 0; col < totalCols; col++) {
-                    let td = document.createElement("td");
-                    td.className = `number-cell ${p.class}`;
-                    td.id = `p-${p.name}-${col}-${i}`;
-                    td.innerText = "";
-                    row.appendChild(td);
-                }
-                tbody.appendChild(row);
-            }
-        });
+    /* ================= GHI HÌNH CANVAS (MP4-MUXER / MEDIARECORDER) ================= */
+    function startRecTimer() {
+      stopRecTimer();
+      recSeconds = 0;
+      const badge = document.getElementById("recBadge");
+      const timerText = document.getElementById("recTimerText");
+      badge.classList.add("recording");
+      timerText.textContent = "00:00";
+      recInterval = setInterval(() => {
+        recSeconds += 1;
+        const m = padNum(Math.floor(recSeconds / 60), 2);
+        const s = padNum(recSeconds % 60, 2);
+        timerText.textContent = `${m}:${s}`;
+      }, 1000);
     }
 
-    function getRandomNumber(digits) {
-        let max = Math.pow(10, digits);
-        let numStr = Math.floor(Math.random() * max).toString();
-        return numStr.padStart(digits, '0');
+    function stopRecTimer() {
+      if (recInterval) {
+        clearInterval(recInterval);
+        recInterval = null;
+      }
+      document.getElementById("recBadge").classList.remove("recording");
     }
 
-    let mediaRecorder;
+    function updateRecButtonsUI(recording) {
+      const recBtn = document.getElementById("recToggleBtn");
+      const vipRecBtn = document.getElementById("vipRecBtn");
+      if (recBtn) {
+        recBtn.classList.toggle("recording", recording);
+        recBtn.textContent = recording ? "⏹ Dừng ghi" : "⏺ Ghi video";
+      }
+      if (vipRecBtn) {
+        vipRecBtn.textContent = recording ? "⏹ Dừng ghi video" : "⏺ Ghi video";
+      }
+    }
 
-    async function startQuayThu() {
-        const btn = document.getElementById("start-btn");
-        const statusText = document.getElementById("status-text");
-        btn.disabled = true;
-        initTable();
+    async function startCanvasRecording() {
+      if (isRecordingVideo) return;
+      const canvas = document.getElementById("recordCanvas");
+      drawBoardToCanvas();
 
-        let totalCols = currentDaiList.length;
-        let queue = [];
-        prizes.forEach(p => {
-            let count = p.count || 1;
-            for (let i = 0; i < count; i++) {
-                for (let col = 0; col < totalCols; col++) {
-                    queue.push({ id: `p-${p.name}-${col}-${i}`, digits: p.digits });
-                }
-            }
-        });
+      lastRecordedVideoBlob = null;
+      recordedChunks = [];
+      videoFrameCounter = 0;
+      isRecordingVideo = true;
+      updateRecButtonsUI(true);
+      startRecTimer();
 
-        // ĐẶT THỜI GIAN CHUẨN: Tổng thời gian quay đúng 90 giây (1 phút 30 giây)
-        let totalCells = queue.length;
-        let timePerCellMs = 90000 / totalCells; 
+      const fps = 30;
+      const canUseMp4Muxer =
+        typeof Mp4Muxer !== "undefined" &&
+        typeof window.VideoEncoder !== "undefined" &&
+        typeof window.VideoFrame !== "undefined";
 
-        // Thử kích hoạt ghi hình tự động (nếu trình duyệt máy tính hỗ trợ)
+      if (canUseMp4Muxer) {
         try {
-            const stream = await navigator.mediaDevices.getDisplayMedia({ 
-                video: { mediaSource: "screen" },
-                audio: false 
+          const support = await window.VideoEncoder.isConfigSupported({
+            codec: "avc1.42001f",
+            width: canvas.width,
+            height: canvas.height,
+            bitrate: 2_500_000,
+            framerate: fps
+          });
+
+          if (support && support.supported) {
+            recorderEngine = "mp4-muxer";
+            lastRecordedVideoExt = "mp4";
+            mp4Muxer = new Mp4Muxer.Muxer({
+              target: new Mp4Muxer.ArrayBufferTarget(),
+              video: {
+                codec: "avc",
+                width: canvas.width,
+                height: canvas.height
+              },
+              fastStart: "in-memory"
             });
-            
-            mediaRecorder = new MediaRecorder(stream, { mimeType: 'video/webm' });
-            let chunks = [];
-            
-            mediaRecorder.ondataavailable = e => chunks.push(e.data);
-            mediaRecorder.onstop = () => {
-                let blob = new Blob(chunks, { type: 'video/webm' });
-                let url = URL.createObjectURL(blob);
-                let a = document.createElement('a');
-                a.href = url;
-                a.download = `quay-thu-xskt-${Date.now()}.webm`;
-                document.body.appendChild(a);
-                a.click();
-                setTimeout(() => { document.body.removeChild(a); window.URL.revokeObjectURL(url); }, 100);
-                statusText.innerText = "Quay xong và đã tự động tải video về máy thành công!";
-            };
 
-            mediaRecorder.start();
-            statusText.innerText = "Đang chạy quay số chậm (1 phút 30 giây) và ghi hình video...";
-        } catch (err) {
-            // Trên điện thoại nếu bị trình duyệt chặn, hướng dẫn người dùng bật quay màn hình hệ thống
-            statusText.innerHTML = "<b>Đang chạy quay số (1 phút 30 giây)...</b><br><i>(Mẹo trên điện thoại: Bạn hãy bật tính năng Quay màn hình có sẵn trên thanh công cụ điện thoại trước khi bấm để lưu video).</i>";
+            videoEncoder = new window.VideoEncoder({
+              output: (chunk, meta) => {
+                mp4Muxer.addVideoChunk(chunk, meta);
+              },
+              error: (err) => {
+                console.error("VideoEncoder error:", err);
+              }
+            });
+
+            videoEncoder.configure({
+              codec: "avc1.42001f",
+              width: canvas.width,
+              height: canvas.height,
+              bitrate: 2_500_000,
+              framerate: fps
+            });
+
+            canvasFrameTimer = setInterval(() => {
+              if (!isRecordingVideo || !videoEncoder || videoEncoder.state === "closed") return;
+              drawBoardToCanvas();
+              const timestampUs = Math.round((videoFrameCounter * 1_000_000) / fps);
+              const durationUs = Math.round(1_000_000 / fps);
+              const frame = new window.VideoFrame(canvas, {
+                timestamp: timestampUs,
+                duration: durationUs
+              });
+              videoEncoder.encode(frame, { keyFrame: videoFrameCounter % 30 === 0 });
+              frame.close();
+              videoFrameCounter += 1;
+            }, 1000 / fps);
+
+            return;
+          }
+        } catch (e) {
+          console.warn("Fallback sang MediaRecorder:", e);
         }
+      }
 
-        let index = 0;
+      // Dự phòng MediaRecorder + fix-webm-duration
+      recorderEngine = "mediarecorder";
+      lastRecordedVideoExt = "webm";
+      const stream = canvas.captureStream(fps);
+      const mimeTypes = [
+        "video/webm;codecs=vp9",
+        "video/webm;codecs=vp8",
+        "video/webm"
+      ];
+      const chosenMime = mimeTypes.find((m) => MediaRecorder.isTypeSupported(m)) || "";
 
-        function runStep() {
-            if (index < queue.length) {
-                let item = queue[index];
-                let cell = document.getElementById(item.id);
-                
-                let counter = 0;
-                let maxCounter = 12; // Số lần đổi số để hiệu ứng mượt và chậm rãi
-                let intervalTime = Math.max(20, (timePerCellMs - 150) / maxCounter);
+      mediaRecorder = chosenMime
+        ? new MediaRecorder(stream, { mimeType: chosenMime })
+        : new MediaRecorder(stream);
 
-                let interval = setInterval(() => {
-                    cell.innerText = getRandomNumber(item.digits);
-                    counter++;
-                    if (counter > maxCounter) {
-                        clearInterval(interval);
-                        cell.innerText = getRandomNumber(item.digits);
-                        index++;
-                        setTimeout(runStep, 40);
-                    }
-                }, intervalTime);
-            } else {
-                // Hoàn thành tất cả các giải
-                setTimeout(() => {
-                    if (mediaRecorder && mediaRecorder.state !== "inactive") {
-                        mediaRecorder.stop();
-                        mediaRecorder.stream.getTracks().forEach(track => track.stop());
-                    }
-                    if(!mediaRecorder) {
-                        statusText.innerHTML = "<b>Quay số hoàn tất!</b> (Hãy kiểm tra lại video từ tính năng quay màn hình của điện thoại).";
-                    }
-                    btn.disabled = false;
-                }, 1500);
-            }
+      mediaRecorder.ondataavailable = (ev) => {
+        if (ev.data && ev.data.size > 0) {
+          recordedChunks.push(ev.data);
         }
+      };
 
-        runStep();
+      mediaRecorder.start(200);
+      canvasFrameTimer = setInterval(() => {
+        if (isRecordingVideo) drawBoardToCanvas();
+      }, 1000 / fps);
     }
 
-    window.onload = function() {
-        initDefaultDate();
-    };
-</script>
+    async function stopCanvasRecording() {
+      if (!isRecordingVideo) return;
+      isRecordingVideo = false;
+      updateRecButtonsUI(false);
+      stopRecTimer();
 
+      if (canvasFrameTimer) {
+        clearInterval(canvasFrameTimer);
+        canvasFrameTimer = null;
+      }
+
+      const durationMs = Math.max(500, recSeconds * 1000);
+
+      if (recorderEngine === "mp4-muxer" && videoEncoder && mp4Muxer) {
+        try {
+          if (videoEncoder.state !== "closed") {
+            await videoEncoder.flush();
+            videoEncoder.close();
+          }
+          mp4Muxer.finalize();
+          const buffer = mp4Muxer.target.buffer;
+          lastRecordedVideoBlob = new Blob([buffer], { type: "video/mp4" });
+        } catch (err) {
+          console.error("Lỗi hoàn tất MP4:", err);
+        }
+        videoEncoder = null;
+        mp4Muxer = null;
+      } else if (recorderEngine === "mediarecorder" && mediaRecorder) {
+        await new Promise((resolve) => {
+          mediaRecorder.onstop = () => {
+            const rawBlob = new Blob(recordedChunks, { type: "video/webm" });
+            if (typeof window.fixWebmDuration === "function") {
+              window.fixWebmDuration(rawBlob, durationMs, (fixedBlob) => {
+                lastRecordedVideoBlob = fixedBlob || rawBlob;
+                resolve();
+              });
+            } else {
+              lastRecordedVideoBlob = rawBlob;
+              resolve();
+            }
+          };
+          if (mediaRecorder.state !== "inactive") {
+            mediaRecorder.stop();
+          } else {
+            resolve();
+          }
+        });
+        mediaRecorder = null;
+      }
+
+      recorderEngine = null;
+      const previewEl = document.getElementById("videoPreviewEl");
+      if (lastRecordedVideoBlob && previewEl) {
+        previewEl.src = URL.createObjectURL(lastRecordedVideoBlob);
+        previewEl.style.display = "block";
+      }
+    }
+
+    async function toggleManualRecording() {
+      if (isRecordingVideo) {
+        await stopCanvasRecording();
+        openSaveModal();
+      } else {
+        await startCanvasRecording();
+      }
+    }
+
+    async function exportRecordedVideo() {
+      if (isRecordingVideo) {
+        await stopCanvasRecording();
+      }
+
+      // Nếu chưa có bản ghi nào thì quay chụp nhanh 2 giây từ Canvas
+      if (!lastRecordedVideoBlob) {
+        await startCanvasRecording();
+        await new Promise((r) => setTimeout(r, 1500));
+        await stopCanvasRecording();
+      }
+
+      if (!lastRecordedVideoBlob) {
+        alert("Trình duyệt chưa hỗ trợ xuất video trực tiếp.");
+        return;
+      }
+
+      const url = URL.createObjectURL(lastRecordedVideoBlob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `quay-thu-${currentRegion.toLowerCase()}-thu-${currentDay}.${lastRecordedVideoExt}`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      setTimeout(() => URL.revokeObjectURL(url), 5000);
+    }
+
+    /* ================= QUAY THỬ & HIỂN THỊ ================= */
+    async function startSpin() {
+      if (isSpinning) return;
+      isSpinning = true;
+      isRollingNow = true;
+
+      const spinBtn = document.getElementById("spinBtn");
+      const vipSpinBtn = document.getElementById("vipSpinBtn");
+      spinBtn.classList.add("spinning");
+      spinBtn.textContent = "⏳ Đang quay...";
+      vipSpinBtn.disabled = true;
+
+      const autoRec = document.getElementById("autoRecCheckbox")?.checked;
+      if (autoRec && !isRecordingVideo) {
+        await startCanvasRecording();
+      }
+
+      const stations = SCHEDULE[currentRegion][currentDay] || [];
+      const specs = currentRegion === "MB" ? PRIZE_SPECS_MB : PRIZE_SPECS_SOUTH;
+      let ticks = 0;
+      const maxTicks = 22;
+
+      const timer = setInterval(async () => {
+        ticks += 1;
+        playTickSound();
+        stations.forEach((st) => {
+          specs.forEach((sp) => {
+            currentResults[st][sp.key] = Array.from({ length: sp.count }, () => randomDigits(sp.digits));
+          });
+        });
+
+        const rollingState = ticks < maxTicks;
+        isRollingNow = rollingState;
+        renderAppBoard(rollingState);
+        renderVipBoard(rollingState);
+        renderLotoBoard();
+        drawBoardToCanvas();
+
+        if (ticks >= maxTicks) {
+          clearInterval(timer);
+          isSpinning = false;
+          isRollingNow = false;
+          spinBtn.classList.remove("spinning");
+          spinBtn.textContent = "▶ Quay thử";
+          vipSpinBtn.disabled = false;
+          drawBoardToCanvas();
+
+          if (autoRec && isRecordingVideo) {
+            // Giữ thêm 0.8s khung hình kết quả cuối trước khi dừng ghi
+            setTimeout(async () => {
+              await stopCanvasRecording();
+            }, 800);
+          }
+        }
+      }, 90);
+    }
+
+    function formatDisplayNumber(val, digits) {
+      const mode = document.querySelector('input[name="appFilterMode"]:checked')?.value || "all";
+      if (mode === "last2") {
+        return String(val).slice(-2);
+      }
+      return padNum(val, digits);
+    }
+
+    function renderStationSelect() {
+      const select = document.getElementById("stationSelect");
+      const stations = SCHEDULE[currentRegion][currentDay] || [];
+      if (currentRegion === "MB") {
+        select.innerHTML = `<option value="ALL">Miền Bắc - 1 Đài chung</option>`;
+        return;
+      }
+      let html = `<option value="ALL">Tất cả (${stations.length} đài)</option>`;
+      stations.forEach((st) => {
+        const sel = selectedStation === st ? "selected" : "";
+        html += `<option value="${st}" ${sel}>Đài ${st}</option>`;
+      });
+      select.innerHTML = html;
+    }
+
+    function renderAppBoard(rolling = false) {
+      const stations = getActiveStations();
+      const specs = currentRegion === "MB" ? PRIZE_SPECS_MB : PRIZE_SPECS_SOUTH;
+      const headerEl = document.getElementById("appTableHeader");
+      const bodyEl = document.getElementById("appTableBody");
+
+      headerEl.innerHTML =
+        `<div class="col-giai">Giải</div>` +
+        stations.map((st) => `<div class="col-station">${st}</div>`).join("");
+
+      if (currentRegion === "MB") {
+        const st = stations[0] || "Miền Bắc";
+        bodyEl.innerHTML = specs.map((sp) => {
+          const nums = (currentResults[st]?.[sp.key] || []).map((n) => formatDisplayNumber(n, sp.digits));
+          const cls = rolling ? "num-cell active-spin" : "num-cell";
+          return `
+            <div class="prize-row ${sp.rowClass}">
+              <div class="col-giai">${sp.label}</div>
+              <div class="mb-grid-container">
+                <div class="mb-sub-row">
+                  <div class="num-line">${nums.map((n) => `<span class="${cls}">${n}</span>`).join("")}</div>
+                </div>
+              </div>
+            </div>
+          `;
+        }).join("");
+        return;
+      }
+
+      bodyEl.innerHTML = specs.map((sp) => {
+        const colsHtml = stations.map((st) => {
+          const nums = (currentResults[st]?.[sp.key] || []).map((n) => formatDisplayNumber(n, sp.digits));
+          const cls = rolling ? "num-cell active-spin" : "num-cell";
+          return `
+            <div class="station-nums">
+              <div class="num-line">${nums.map((n) => `<span class="${cls}">${n}</span>`).join("")}</div>
+            </div>
+          `;
+        }).join("");
+        return `
+          <div class="prize-row ${sp.rowClass}">
+            <div class="col-giai">${sp.label}</div>
+            ${colsHtml}
+          </div>
+        `;
+      }).join("");
+    }
+
+    function renderDayNav() {
+      const nav = document.getElementById("dayNav");
+      nav.innerHTML = DAY_LABELS.map((d) => {
+        const active = d.day === currentDay ? "active" : "";
+        const stCount = (SCHEDULE[currentRegion][d.day] || []).length;
+        return `
+          <button class="day-btn ${active}" onclick="selectDay(${d.day})">
+            ${d.label}
+            <span>${stCount} đài</span>
+          </button>
+        `;
+      }).join("");
+    }
+
+    function renderVipSuggestions() {
+      const grid = document.getElementById("refGrid");
+      grid.innerHTML = vipSuggestions.map((item) => `
+        <div class="vip-card">
+          <div class="vip-card-head">
+            <div class="station-name">${item.station}</div>
+            <span class="tag-vip">CẦU ĐẸP</span>
+          </div>
+          <div class="balls-row">
+            <span>Bạch thủ:</span>
+            <span class="ball-vip">${item.bachThu}</span>
+          </div>
+          <div class="balls-row">
+            <span>Song thủ:</span>
+            <span class="pill-gold">${item.songThu[0]} - ${item.songThu[1]}</span>
+          </div>
+          <div class="balls-row" style="margin-bottom:0;">
+            <span>Dàn số:</span>
+            <span class="pill-sub">${item.danDe}</span>
+          </div>
+        </div>
+      `).join("");
+    }
+
+    function renderVipBoard(rolling = false) {
+      const stations = SCHEDULE[currentRegion][currentDay] || [];
+      const specs = currentRegion === "MB" ? PRIZE_SPECS_MB : PRIZE_SPECS_SOUTH;
+      const head = document.getElementById("vipBoardHead");
+      const body = document.getElementById("vipBoardBody");
+
+      head.innerHTML = `
+        <tr>
+          <th style="width:82px;">Giải</th>
+          ${stations.map((st) => `<th>${st}</th>`).join("")}
+        </tr>
+      `;
+
+      body.innerHTML = specs.map((sp) => {
+        const tds = stations.map((st) => {
+          const nums = currentResults[st]?.[sp.key] || [];
+          const extraClass = (sp.key === "g8" || sp.key === "db") ? "num-g8" : "";
+          const rollClass = rolling ? "rolling" : "";
+          return `
+            <td>
+              <div class="num-group">
+                ${nums.map((n) => `<span class="${extraClass} ${rollClass}">${n}</span>`).join("")}
+              </div>
+            </td>
+          `;
+        }).join("");
+        return `
+          <tr>
+            <td class="col-prize">${sp.label}</td>
+            ${tds}
+          </tr>
+        `;
+      }).join("");
+    }
+
+    function renderLotoBoard() {
+      const stations = SCHEDULE[currentRegion][currentDay] || [];
+      const grid = document.getElementById("lotoGrid");
+
+      grid.innerHTML = stations.map((st) => {
+        const dauMap = Array.from({ length: 10 }, () => []);
+        const prizeObj = currentResults[st] || {};
+        Object.values(prizeObj).forEach((arr) => {
+          (arr || []).forEach((numStr) => {
+            const last2 = String(numStr).slice(-2).padStart(2, "0");
+            const dau = Number(last2[0]);
+            dauMap[dau].push(last2);
+          });
+        });
+
+        const rowsHtml = dauMap.map((list, idx) => {
+          list.sort();
+          return `
+            <tr>
+              <td class="td-dau">Đầu ${idx}</td>
+              <td class="td-duoi">${list.length ? list.join(", ") : "-"}</td>
+            </tr>
+          `;
+        }).join("");
+
+        return `
+          <div class="loto-box">
+            <div class="loto-box-head">Đầu - Đuôi Loto: ${st}</div>
+            <table class="loto-tb"><tbody>${rowsHtml}</tbody></table>
+          </div>
+        `;
+      }).join("");
+    }
+
+    function buildResultPlainText() {
+      const dayLabel = DAY_LABELS.find((d) => d.day === currentDay)?.label || "";
+      const stations = SCHEDULE[currentRegion][currentDay] || [];
+      const specs = currentRegion === "MB" ? PRIZE_SPECS_MB : PRIZE_SPECS_SOUTH;
+      let lines = [`QUAY THỬ ${SCHEDULE[currentRegion].name.toUpperCase()} - ${dayLabel.toUpperCase()}`, ""];
+
+      stations.forEach((st) => {
+        lines.push(`=== ĐÀI ${st.toUpperCase()} ===`);
+        specs.forEach((sp) => {
+          const vals = (currentResults[st]?.[sp.key] || []).join(" - ");
+          lines.push(`${sp.label}: ${vals}`);
+        });
+        lines.push("");
+      });
+      return lines.join("\n");
+    }
+
+    function openSaveModal() {
+      const dayLabel = DAY_LABELS.find((d) => d.day === currentDay)?.label || "";
+      const previewEl = document.getElementById("videoPreviewEl");
+      if (lastRecordedVideoBlob && previewEl) {
+        previewEl.src = URL.createObjectURL(lastRecordedVideoBlob);
+        previewEl.style.display = "block";
+      } else if (previewEl) {
+        previewEl.style.display = "none";
+      }
+      document.getElementById("saveSummaryText").textContent =
+        `Bảng quay thử ${SCHEDULE[currentRegion].name} (${dayLabel}) — Xuất video thực tế hoặc sao chép/tải kết quả.`;
+      document.getElementById("saveModal").classList.add("show");
+    }
+
+    function closeSaveModal() {
+      document.getElementById("saveModal").classList.remove("show");
+    }
+
+    function copyResultText() {
+      const text = buildResultPlainText();
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(() => {
+          alert("Đã sao chép kết quả quay thử!");
+        }).catch(() => {
+          fallbackCopy(text);
+        });
+      } else {
+        fallbackCopy(text);
+      }
+    }
+
+    function fallbackCopy(text) {
+      const ta = document.createElement("textarea");
+      ta.value = text;
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand("copy");
+      document.body.removeChild(ta);
+      alert("Đã sao chép kết quả quay thử!");
+    }
+
+    function downloadResultTxt() {
+      const text = buildResultPlainText();
+      const blob = new Blob([text], { type: "text/plain;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `quay-thu-${currentRegion.toLowerCase()}-thu-${currentDay}.txt`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+
+    function renderAll() {
+      const dayObj = DAY_LABELS.find((d) => d.day === currentDay) || DAY_LABELS[0];
+      const regionInfo = SCHEDULE[currentRegion];
+
+      document.getElementById("appTitle").textContent = `QUAY THỬ XỔ SỐ ${regionInfo.name.toUpperCase()}`;
+      document.getElementById("appSubtitle").textContent = `${dayObj.label} • Các đài: ${(regionInfo[currentDay] || []).join(", ")}`;
+      document.getElementById("mainHeading").textContent = `THAM KHẢO SỐ ĐẸP & QUAY THỬ ${currentRegion === "MN" ? "XSMN" : currentRegion === "MT" ? "XSMT" : "XSMB"}`;
+      document.getElementById("todayText").textContent = `${dayObj.label} • Lịch mở thưởng: ${(regionInfo[currentDay] || []).join(" - ")}`;
+
+      renderStationSelect();
+      renderAppBoard(false);
+      renderDayNav();
+      renderVipSuggestions();
+      renderVipBoard(false);
+      renderLotoBoard();
+      drawBoardToCanvas();
+    }
+
+    generateInitialResults();
+    generateVipSuggestions();
+    renderAll();
+  </script>
 </body>
 </html>
